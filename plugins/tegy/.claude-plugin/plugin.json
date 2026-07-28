@@ -1,0 +1,18 @@
+{
+  "name": "tegy",
+  "description": "Explicit commands for running durable strategy work through Tegy's authenticated remote MCP service.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Rocket Minds"
+  },
+  "homepage": "https://app.tegy.io/mcp",
+  "repository": "https://github.com/Rocket-Minds/tegy-plugins",
+  "license": "MIT",
+  "keywords": [
+    "strategy",
+    "gtm",
+    "product",
+    "m-and-a",
+    "tegy"
+  ]
+}
