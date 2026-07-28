@@ -11,13 +11,13 @@
     {
       "name": "tegy",
       "description": "Run explicit strategy, GTM, product, M&A, and portable handoff workflows through Tegy.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "source": {
         "source": "git-subdir",
         "url": "Rocket-Minds/tegy-plugins",
         "path": "plugins/tegy",
         "ref": "main",
-        "sha": "6d115c11266790cae1ce2ff879c655e30b4ab61d"
+        "sha": "60ec9c4dd851e8fba292f2e71e1ba8e36224a565"
       },
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
