@@ -6,9 +6,21 @@ const root = path.resolve("plugins/tegy")
 const manifest = JSON.parse(
   await readFile(path.join(root, ".claude-plugin/plugin.json"), "utf8")
 )
+const marketplace = JSON.parse(
+  await readFile(".claude-plugin/marketplace.json", "utf8")
+)
 
 assert.equal(manifest.name, "tegy")
 assert.equal(manifest.version, "1.0.0")
+assert.equal(marketplace.name, "tegy")
+assert.equal(marketplace.plugins?.length, 1)
+assert.equal(marketplace.plugins[0]?.name, "tegy")
+assert.equal(marketplace.plugins[0]?.source?.source, "git-subdir")
+assert.equal(marketplace.plugins[0]?.source?.path, "plugins/tegy")
+assert.match(
+  marketplace.plugins[0]?.source?.sha ?? "",
+  /^[0-9a-f]{40}$/u
+)
 
 const expectedSkills = ["advise", "gtm", "product", "ma", "handoff"]
 const pluginFiles = await walk(root)
