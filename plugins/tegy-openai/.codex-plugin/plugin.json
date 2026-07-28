@@ -1,0 +1,48 @@
+{
+  "name": "tegy-openai",
+  "version": "1.1.3",
+  "description": "Durable strategy consulting workflows powered by Tegy's authenticated remote service.",
+  "author": {
+    "name": "Rocket Minds",
+    "email": "admin@tegy.io",
+    "url": "https://tegy.io/"
+  },
+  "homepage": "https://app.tegy.io/mcp",
+  "repository": "https://github.com/Rocket-Minds/tegy-plugins",
+  "license": "MIT",
+  "keywords": [
+    "strategy",
+    "gtm",
+    "product",
+    "m-and-a",
+    "analysis",
+    "tegy"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Tegy",
+    "shortDescription": "Strategy consulting with durable chats and evidence",
+    "longDescription": "Run general strategy, go-to-market, product, and M&A work through Tegy's authenticated consulting runtime. Keep the work durable, attach only evidence you choose, see real usage and reset information, and create portable handoffs from completed analysis.",
+    "developerName": "Rocket Minds",
+    "category": "Business & Operations",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://tegy.io/",
+    "privacyPolicyURL": "https://app.tegy.io/privacy",
+    "termsOfServiceURL": "https://app.tegy.io/terms",
+    "defaultPrompt": [
+      "Pressure-test this strategic decision with Tegy",
+      "Build a GTM recommendation from my evidence",
+      "Create a portable handoff from my completed analysis"
+    ],
+    "brandColor": "#FE6C2D",
+    "composerIcon": "./assets/tegy-mark.png",
+    "logo": "./assets/tegy-mark.png",
+    "screenshots": []
+  }
+}

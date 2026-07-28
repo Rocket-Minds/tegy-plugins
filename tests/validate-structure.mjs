@@ -2,36 +2,105 @@ import assert from "node:assert/strict"
 import { readFile, readdir, stat } from "node:fs/promises"
 import path from "node:path"
 
-const root = path.resolve("plugins/tegy")
-const manifest = JSON.parse(
-  await readFile(path.join(root, ".claude-plugin/plugin.json"), "utf8")
+const claudeRoot = path.resolve("plugins/tegy")
+const openAiRoot = path.resolve("plugins/tegy-openai")
+const claudeManifest = await readJson(
+  path.join(claudeRoot, ".claude-plugin/plugin.json")
 )
-const marketplace = JSON.parse(
-  await readFile(".claude-plugin/marketplace.json", "utf8")
+const codexManifest = await readJson(
+  path.join(openAiRoot, ".codex-plugin/plugin.json")
+)
+const appManifest = await readJson(path.join(openAiRoot, ".app.json"))
+const mcpManifest = await readJson(path.join(openAiRoot, ".mcp.json"))
+const claudeMarketplace = await readJson(".claude-plugin/marketplace.json")
+const codexMarketplace = await readJson(".agents/plugins/marketplace.json")
+
+assert.equal(claudeManifest.name, "tegy")
+assert.equal(claudeManifest.version, "1.0.1")
+assert.equal(codexManifest.name, "tegy-openai")
+assert.equal(codexManifest.version, "1.1.3")
+assert.equal(codexManifest.apps, "./.app.json")
+assert.equal(codexManifest.mcpServers, "./.mcp.json")
+assert.equal(codexManifest.skills, "./skills/")
+assert.equal(codexManifest.interface?.developerName, "Rocket Minds")
+assert.equal(
+  codexManifest.interface?.privacyPolicyURL,
+  "https://app.tegy.io/privacy"
+)
+assert.equal(
+  codexManifest.interface?.termsOfServiceURL,
+  "https://app.tegy.io/terms"
+)
+assert.equal(
+  appManifest.apps?.tegy?.id,
+  "asdk_app_6a692aff65c8819198d21196888695b4"
+)
+assert.deepEqual(mcpManifest, {
+  mcpServers: {
+    "tegy-mcp": {
+      oauth_resource: "https://mcp.tegy.io/mcp",
+      scopes: [
+        "tegy:account:read",
+        "tegy:chat:read",
+        "tegy:chat:write",
+        "tegy:analysis:run",
+        "tegy:artifacts:write",
+      ],
+      type: "http",
+      url: "https://mcp.tegy.io/mcp",
+    },
+  },
+})
+assert.doesNotMatch(
+  JSON.stringify(mcpManifest),
+  /bearer|command|env|header|token/iu
 )
 
-assert.equal(manifest.name, "tegy")
-assert.equal(manifest.version, "1.0.1")
-assert.equal(marketplace.name, "tegy")
-assert.equal(marketplace.plugins?.length, 1)
-assert.equal(marketplace.plugins[0]?.name, "tegy")
-assert.equal(marketplace.plugins[0]?.source?.source, "git-subdir")
-assert.equal(marketplace.plugins[0]?.source?.path, "plugins/tegy")
+assert.equal(claudeMarketplace.name, "tegy")
+assert.equal(claudeMarketplace.plugins?.length, 1)
+assert.equal(claudeMarketplace.plugins[0]?.name, "tegy")
+assert.equal(claudeMarketplace.plugins[0]?.source?.source, "git-subdir")
+assert.equal(claudeMarketplace.plugins[0]?.source?.path, "plugins/tegy")
 assert.match(
-  marketplace.plugins[0]?.source?.sha ?? "",
+  claudeMarketplace.plugins[0]?.source?.sha ?? "",
   /^[0-9a-f]{40}$/u
 )
 
+assert.equal(codexMarketplace.name, "tegy")
+assert.equal(codexMarketplace.plugins?.length, 1)
+assert.equal(codexMarketplace.plugins[0]?.name, "tegy-openai")
+assert.equal(
+  codexMarketplace.plugins[0]?.source?.path,
+  "./plugins/tegy-openai"
+)
+assert.equal(
+  codexMarketplace.plugins[0]?.policy?.installation,
+  "AVAILABLE"
+)
+assert.equal(
+  codexMarketplace.plugins[0]?.policy?.authentication,
+  "ON_INSTALL"
+)
+
 const expectedSkills = ["advise", "gtm", "product", "ma", "handoff"]
-const pluginFiles = await walk(root)
+const expectedOpenAiSkills = expectedSkills.map((name) => `tegy-${name}`)
+const pluginFiles = [
+  ...(await walk(claudeRoot)),
+  ...(await walk(openAiRoot)),
+]
 const forbiddenNames = new Set([
-  ".mcp.json",
   ".lsp.json",
   "package.json",
   "package-lock.json",
   "hooks.json",
   "monitors.json",
 ])
+
+assert.equal(
+  (await walk(claudeRoot)).some((file) => path.basename(file) === ".mcp.json"),
+  false,
+  "Claude command pack must not bundle an MCP server"
+)
 
 for (const file of pluginFiles) {
   assert.equal(
@@ -48,7 +117,7 @@ for (const file of pluginFiles) {
 
 for (const skillName of expectedSkills) {
   const source = await readFile(
-    path.join(root, "skills", skillName, "SKILL.md"),
+    path.join(claudeRoot, "skills", skillName, "SKILL.md"),
     "utf8"
   )
 
@@ -66,7 +135,7 @@ for (const skillName of expectedSkills) {
 
 for (const skillName of ["gtm", "product", "ma"]) {
   const source = await readFile(
-    path.join(root, "skills", skillName, "SKILL.md"),
+    path.join(claudeRoot, "skills", skillName, "SKILL.md"),
     "utf8"
   )
 
@@ -76,21 +145,53 @@ for (const skillName of ["gtm", "product", "ma"]) {
 }
 
 const advise = await readFile(
-  path.join(root, "skills", "advise", "SKILL.md"),
+  path.join(claudeRoot, "skills", "advise", "SKILL.md"),
   "utf8"
 )
 assert.match(advise, /capability: "advise"/u)
 
 const handoff = await readFile(
-  path.join(root, "skills", "handoff", "SKILL.md"),
+  path.join(claudeRoot, "skills", "handoff", "SKILL.md"),
   "utf8"
 )
 assert.match(handoff, /Do not infer/u)
 assert.match(handoff, /mcp__tegy__create_handoff/u)
 
+for (const skillName of expectedOpenAiSkills) {
+  const source = await readFile(
+    path.join(openAiRoot, "skills", skillName, "SKILL.md"),
+    "utf8"
+  )
+
+  assert.match(source, new RegExp(`name: ${skillName}`, "u"))
+  assert.match(source, /`get_account`/u)
+  assert.match(source, /the `tegy-mcp` MCP server/u)
+  assert.match(source, /^---\n[\s\S]+?\n---\n/u)
+  assert.doesNotMatch(source, /\[TODO:/u)
+}
+
+for (const skillName of ["tegy-gtm", "tegy-product", "tegy-ma"]) {
+  const source = await readFile(
+    path.join(openAiRoot, "skills", skillName, "SKILL.md"),
+    "utf8"
+  )
+  const capability = skillName.replace("tegy-", "")
+
+  assert.match(source, new RegExp(`capability: "${capability}"`, "u"))
+  assert.match(source, /keyword|matching words/u)
+}
+
+const reviewCases = await readJson("submission/openai/test-cases.json")
+assert.equal(reviewCases.positive?.length, 5)
+assert.equal(reviewCases.negative?.length, 3)
+
 console.log(
-  "Tegy plugin structure, capability routing, and no-executable checks passed."
+  "Tegy Claude/OpenAI plugin structure, capability routing, review cases, and no-executable checks passed."
 )
+
+async function readJson(file) {
+  return JSON.parse(await readFile(file, "utf8"))
+}
 
 async function walk(directory) {
   const files = []
