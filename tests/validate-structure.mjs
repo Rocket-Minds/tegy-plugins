@@ -11,7 +11,7 @@ const marketplace = JSON.parse(
 )
 
 assert.equal(manifest.name, "tegy")
-assert.equal(manifest.version, "1.0.0")
+assert.equal(manifest.version, "1.0.1")
 assert.equal(marketplace.name, "tegy")
 assert.equal(marketplace.plugins?.length, 1)
 assert.equal(marketplace.plugins[0]?.name, "tegy")
@@ -56,6 +56,11 @@ for (const skillName of expectedSkills) {
   assert.match(source, /disable-model-invocation: true/u)
   assert.match(source, /mcp__tegy__/u)
   assert.match(source, /disallowed-tools:.*Bash/u)
+  assert.match(source, /never\s+call Bash|do not call Bash/iu)
+  assert.match(
+    source,
+    /(?:absent\s+from|not\s+present\s+in)\s+the\s+tool\s+result/u
+  )
   assert.doesNotMatch(source, /\bnpx\b|\bnpm install\b|\bcurl\b/u)
 }
 

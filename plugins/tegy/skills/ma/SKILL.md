@@ -17,7 +17,8 @@ work.
 1. Call `mcp__tegy__get_account`. Stop on an account action or authentication
    error and show its exact recovery URL.
 2. Create a durable Tegy chat with a unique opaque idempotency key retained for
-   identical retries.
+   identical retries. Invent the key directly; never call Bash, `uuidgen`, a
+   file tool, or another non-Tegy tool to generate it.
 3. Start one turn with `capability: "ma"` and `text` equal to `$ARGUMENTS`
    exactly. The explicit `/tegy:ma` command is the capability selection; never
    route from keywords.
@@ -27,7 +28,9 @@ work.
    calling `mcp__tegy__continue_turn`.
 6. Return only real Tegy assistant content, faithfully attributed, with
    chat/turn ids, runtime provenance, usage when present, and resource links.
-   Preserve and accurately label useful `partial` output.
+   Preserve and accurately label useful `partial` output. Add no health claim,
+   implementation detail, runtime label, or evaluation absent from the tool
+   result.
 
 Do not forward local files, unrelated Claude transcript, or implicit context.
 Do not silently summarize, rewrite, or fabricate Tegy output.

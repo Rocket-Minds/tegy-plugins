@@ -17,7 +17,8 @@ not start paid work.
 1. Call `mcp__tegy__get_account`. Stop on an account action or authentication
    error and show its exact recovery URL.
 2. Create a durable Tegy chat with a unique opaque idempotency key retained for
-   identical retries.
+   identical retries. Invent the key directly; never call Bash, `uuidgen`, a
+   file tool, or another non-Tegy tool to generate it.
 3. Start one turn with `capability: "product"`, the returned chat id, `text`
    equal to `$ARGUMENTS` exactly, and a separate retained idempotency key. The
    explicit command invocation—not keywords in the request—selects product.
@@ -26,7 +27,9 @@ not start paid work.
    stop. Never infer an answer.
 6. When terminal, reproduce real Tegy assistant content faithfully, clearly
    attributed to Tegy, with chat/turn ids, runtime version, usage when present,
-   and resource links. Preserve useful content in a `partial` result.
+   and resource links. Preserve useful content in a `partial` result. Add no
+   health claim, implementation detail, runtime label, or evaluation absent
+   from the tool result.
 
 Do not forward local files, unrelated Claude conversation, or implicit context.
 Do not silently summarize, rewrite, or fabricate a Tegy response.

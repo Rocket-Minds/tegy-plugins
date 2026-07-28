@@ -20,7 +20,8 @@ not start paid work.
    `https://mcp.tegy.io/mcp` and stop.
 3. Create a new durable chat with `mcp__tegy__create_chat`. Generate one opaque
    idempotency key, retain it in this conversation, and reuse it only when
-   retrying the identical call.
+   retrying the identical call. Invent the key directly; do not call Bash,
+   `uuidgen`, a file tool, or any non-Tegy tool to generate it.
 4. Call `mcp__tegy__start_turn` with:
    - the returned `chat_id`;
    - `capability: "advise"`;
@@ -34,7 +35,8 @@ not start paid work.
 7. On completion, label the returned assistant text as a real Tegy response and
    reproduce it faithfully. Include the `chat_id`, `turn_id`, runtime version,
    usage receipt when present, and resource links. Do not silently summarize,
-   rewrite, or fabricate Tegy output.
+   rewrite, or fabricate Tegy output. Add no health claim, implementation
+   detail, runtime label, or evaluation that was not present in the tool result.
 
 Never forward the surrounding Claude conversation, local files, or other
 context unless the user explicitly supplies that material to Tegy. Never choose

@@ -29,10 +29,13 @@ conversation.
    - the exact downstream task supplied by the user;
    - only the explicitly supplied locked decisions, or an empty array when the
      user explicitly said none;
-   - one opaque idempotency key retained for identical retries.
+   - one opaque idempotency key retained for identical retries. Invent it
+     directly; never call Bash, `uuidgen`, a file tool, or another non-Tegy
+     tool to generate it.
 4. Return the handoff id, protected resource URI, byte count, MIME type,
    SHA-256, runtime version, and request id. Do not fetch or reproduce the full
-   handoff unless the user explicitly asks.
+   handoff unless the user explicitly asks. Add no health claim, implementation
+   detail, runtime label, or evaluation absent from the tool result.
 
 Never claim a handoff exists unless the Tegy tool returns success. Never create
 a recap, raw transcript, inferred decision log, or fabricated Tegy output in

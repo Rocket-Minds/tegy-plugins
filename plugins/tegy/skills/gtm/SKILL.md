@@ -17,7 +17,8 @@ start paid work.
 1. Call `mcp__tegy__get_account`. Stop on an account action or authentication
    error and show its exact recovery URL.
 2. Create a durable Tegy chat. Generate and retain a unique opaque idempotency
-   key; reuse it only for an identical retry.
+   key; reuse it only for an identical retry. Invent the key directly; never
+   call Bash, `uuidgen`, a file tool, or another non-Tegy tool to generate it.
 3. Start one turn with `capability: "gtm"` and `text` equal to `$ARGUMENTS`
    exactly. Never select the capability from keyword matching: the user's
    `/tegy:gtm` invocation is the selector.
@@ -27,7 +28,9 @@ start paid work.
    Continue only with answers explicitly supplied by the user.
 6. Return real completed Tegy assistant text faithfully with its `chat_id`,
    `turn_id`, runtime version, usage receipt when present, and resource links.
-   Do not rewrite, silently summarize, or fabricate it.
+   Do not rewrite, silently summarize, or fabricate it. Add no health claim,
+   implementation detail, runtime label, or evaluation absent from the tool
+   result.
 
 Do not send local files, the surrounding Claude transcript, or implicit context
 to Tegy. Only `$ARGUMENTS` is authorized for this turn.
