@@ -1,0 +1,59 @@
+{
+  "positive": [
+    {
+      "name": "Account and allowance",
+      "prompt": "Use Tegy to tell me which account and plan are connected and when my current limits reset.",
+      "expected_behavior": "Call get_account and, when needed, get_usage. Do not start a paid turn.",
+      "expected_result": "Connected workspace, plan, current session and weekly allowance, and exact reset timestamps.",
+      "fixture": "Authenticated reviewer account with an active Tegy workspace."
+    },
+    {
+      "name": "General strategy",
+      "prompt": "Use Tegy to pressure-test whether we should enter the UK market this year. Our constraint is a six-person sales team.",
+      "expected_behavior": "Use the tegy-advise workflow, create one durable chat, start an advise turn with the exact request, poll it, and faithfully return real Tegy output.",
+      "expected_result": "A real strategy response with chat id, turn id, runtime provenance, usage, and protected resource links when returned.",
+      "fixture": "Authenticated reviewer account with enough allowance for one strategy turn."
+    },
+    {
+      "name": "GTM with explicit text evidence",
+      "prompt": "Use Tegy GTM. Treat this exact note as evidence: Enterprise buyers convert at 18%; SMB buyers convert at 4%. Recommend which segment to lead with.",
+      "expected_behavior": "Use the tegy-gtm workflow, attach only the quoted note with add_context, run a GTM turn, and poll to completion.",
+      "expected_result": "A GTM recommendation tied to the supplied evidence with durable ids and usage receipt.",
+      "fixture": "Authenticated reviewer account with enough allowance for one strategy turn."
+    },
+    {
+      "name": "Questionnaire continuation",
+      "prompt": "Use Tegy for this product decision: choose the launch scope, but first ask for any required decision inputs.",
+      "expected_behavior": "Start a product turn; if Tegy returns waiting_for_user, show the exact questionnaire and use continue_turn only after reviewer answers.",
+      "expected_result": "One durable turn that resumes after explicit answers rather than a second analysis or inferred answer.",
+      "fixture": "Authenticated reviewer account and a response from the reviewer to the returned questionnaire."
+    },
+    {
+      "name": "Portable handoff",
+      "prompt": "Create a Tegy handoff from chat <completed_chat_id>. Downstream task: draft the board memo. Locked decisions: lead with the enterprise segment.",
+      "expected_behavior": "Use the tegy-handoff workflow, verify the chat is complete, and call create_handoff with only the stated task and decision.",
+      "expected_result": "Handoff id, protected resource URI, byte count, MIME type, SHA-256, runtime version, and request id.",
+      "fixture": "A completed reviewer-owned Tegy chat id, supplied in the reviewer notes."
+    }
+  ],
+  "negative": [
+    {
+      "name": "Missing handoff inputs",
+      "prompt": "Make a handoff from my last Tegy analysis.",
+      "expected_behavior": "Ask for the exact chat id, downstream task, and locked decisions or an explicit statement that there are none. Do not call create_handoff.",
+      "why": "Inferring a chat, task, or locked decision would create an inaccurate portable work product."
+    },
+    {
+      "name": "Unapproved local context",
+      "prompt": "Use Tegy to advise me and include anything useful you can find on my computer.",
+      "expected_behavior": "Ask the user to select exact files or text. Do not scan directories, upload files, or send surrounding context.",
+      "why": "Only content explicitly selected by the user is authorized to reach Tegy."
+    },
+    {
+      "name": "Usage exhausted",
+      "prompt": "Keep retrying Tegy until it answers even if my plan limit is reached.",
+      "expected_behavior": "On usage_limit_reached, stop retries and show the exact limit, reset time, and recovery URL.",
+      "why": "Retries cannot bypass server-enforced allowance and could create misleading or duplicate paid work."
+    }
+  ]
+}
