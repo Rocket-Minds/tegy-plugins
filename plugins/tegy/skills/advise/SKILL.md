@@ -14,10 +14,20 @@ Treat `$ARGUMENTS` as the exact user instruction for Tegy.
 If `$ARGUMENTS` is blank, ask the user for the strategy question and stop. Do
 not start paid work.
 
+If `mcp__tegy__get_account` is absent from the available tools or authentication
+cannot start in this session, the Tegy command pack is installed but the Tegy
+connector is not usable here. Tell the user to:
+
+1. open [Connect Tegy](https://claude.ai/new?modal=add-custom-connector&connectorName=Tegy&connectorUrl=https%3A%2F%2Fmcp.tegy.io%2Fmcp#settings/customize-connectors);
+2. add Tegy, select **Connect**, then sign in to Tegy and allow access;
+3. enable Tegy in the Claude conversation;
+4. retry this command in a new session if the tools are still absent.
+
+Stop without claiming that Tegy ran.
+
 1. Call `mcp__tegy__get_account`.
 2. If it returns `account_action_required`, show the supplied completion URL and
-   stop. If authentication is unavailable, tell the user to connect
-   `https://mcp.tegy.io/mcp` and stop.
+   stop.
 3. Create a new durable chat with `mcp__tegy__create_chat`. Generate one opaque
    idempotency key, retain it in this conversation, and reuse it only when
    retrying the identical call. Invent the key directly; do not call Bash,
@@ -51,4 +61,5 @@ For typed errors:
   failure.
 - `provider_rate_limited` or `service_busy`: show the retry guidance without
   claiming the user's allowance is exhausted.
-- authentication or reauthorization errors: direct the user to reconnect Tegy.
+- authentication or reauthorization errors: use the **Connect Tegy** recovery
+  steps above.

@@ -22,6 +22,17 @@ hook, dependency, or installation script. Tegy's hosted service remains the
 product boundary for authentication, usage, durable chat state, StrategyOS
 behavior, exact uploads, and real assistant output.
 
+## Claude
+
+Connect the hosted Tegy service before using the optional command pack:
+
+1. Open [Connect Tegy](https://claude.ai/new?modal=add-custom-connector&connectorName=Tegy&connectorUrl=https%3A%2F%2Fmcp.tegy.io%2Fmcp#settings/customize-connectors).
+2. Add Tegy, select **Connect**, then sign in to Tegy and allow access.
+3. Enable Tegy in the Claude conversation where you want to use it.
+4. Approve the first tool call if Claude asks.
+
+An installed command pack is not proof that the connector is authorized.
+
 ## Claude Code
 
 First connect the remote Tegy MCP service:
@@ -31,10 +42,10 @@ claude mcp add --transport http tegy https://mcp.tegy.io/mcp
 ```
 
 Open `/mcp` in Claude Code and complete the browser authentication when
-prompted. If Tegy is already connected through the same claude.ai account, do
-not add the duplicate direct connection.
+prompted. If Tegy is already connected through the same claude.ai account and
+appears healthy in `/mcp`, do not add the duplicate direct connection.
 
-Then add this marketplace and install the command pack:
+Then, optionally, add this marketplace and install the command pack:
 
 ```text
 /plugin marketplace add Rocket-Minds/tegy-plugins

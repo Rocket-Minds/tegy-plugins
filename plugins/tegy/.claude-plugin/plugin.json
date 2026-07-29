@@ -1,7 +1,7 @@
 {
   "name": "tegy",
   "description": "Explicit commands for running durable strategy work through Tegy's authenticated remote MCP service.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": {
     "name": "Rocket Minds"
   },
