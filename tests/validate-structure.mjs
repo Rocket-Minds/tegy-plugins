@@ -14,9 +14,10 @@ const appManifest = await readJson(path.join(openAiRoot, ".app.json"))
 const mcpManifest = await readJson(path.join(openAiRoot, ".mcp.json"))
 const claudeMarketplace = await readJson(".claude-plugin/marketplace.json")
 const codexMarketplace = await readJson(".agents/plugins/marketplace.json")
+const readme = await readFile("README.md", "utf8")
 
 assert.equal(claudeManifest.name, "tegy")
-assert.equal(claudeManifest.version, "1.0.1")
+assert.equal(claudeManifest.version, "1.0.2")
 assert.equal(codexManifest.name, "tegy-openai")
 assert.equal(codexManifest.version, "1.1.3")
 assert.equal(codexManifest.apps, "./.app.json")
@@ -101,6 +102,9 @@ assert.equal(
   false,
   "Claude command pack must not bundle an MCP server"
 )
+assert.match(readme, /Connect the hosted Tegy service before/u)
+assert.match(readme, /An installed command pack is not proof/u)
+assert.match(readme, /Then, optionally, add this marketplace/u)
 
 for (const file of pluginFiles) {
   assert.equal(
@@ -126,6 +130,10 @@ for (const skillName of expectedSkills) {
   assert.match(source, /mcp__tegy__/u)
   assert.match(source, /disallowed-tools:.*Bash/u)
   assert.match(source, /never\s+call Bash|do not call Bash/iu)
+  assert.match(source, /\[Connect Tegy\]\(https:\/\/claude\.ai\/new\?/u)
+  assert.match(source, /add Tegy, select \*\*Connect\*\*/u)
+  assert.match(source, /enable Tegy in the Claude conversation/u)
+  assert.match(source, /Stop without claiming that Tegy ran\./u)
   assert.match(
     source,
     /(?:absent\s+from|not\s+present\s+in)\s+the\s+tool\s+result/u

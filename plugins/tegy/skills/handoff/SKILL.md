@@ -19,8 +19,20 @@ If any item is absent or ambiguous, ask for it and stop. Do not infer a task or
 decision from the chat, from prose, or from the surrounding Claude
 conversation.
 
+If `mcp__tegy__get_account` is absent from the available tools or authentication
+cannot start in this session, the Tegy command pack is installed but the Tegy
+connector is not usable here. Tell the user to:
+
+1. open [Connect Tegy](https://claude.ai/new?modal=add-custom-connector&connectorName=Tegy&connectorUrl=https%3A%2F%2Fmcp.tegy.io%2Fmcp#settings/customize-connectors);
+2. add Tegy, select **Connect**, then sign in to Tegy and allow access;
+3. enable Tegy in the Claude conversation;
+4. retry this command in a new session if the tools are still absent.
+
+Stop without claiming that Tegy ran.
+
 1. Call `mcp__tegy__get_account` and stop on authentication or account action,
-   showing the exact recovery URL.
+   showing the exact recovery URL. For authentication or reauthorization, use
+   the **Connect Tegy** recovery steps above.
 2. Call `mcp__tegy__get_chat` for the explicit chat id. If a turn is active,
    report its resource and stop until the user asks to retry after it is
    terminal.
