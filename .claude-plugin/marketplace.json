@@ -10,22 +10,20 @@
   "plugins": [
     {
       "name": "tegy",
-      "description": "Run explicit strategy, GTM, product, M&A, and portable handoff workflows through Tegy.",
-      "version": "1.0.2",
+      "description": "Independently review one supplied strategy draft through Tegy.",
+      "version": "2.0.0",
       "source": {
         "source": "git-subdir",
         "url": "Rocket-Minds/tegy-plugins",
         "path": "plugins/tegy",
         "ref": "main",
-        "sha": "7fcf6a2ec49f39fe490d0726f1369c28a5ea747f"
+        "sha": "51f65e7ada98254e5ba90e02ec98f8055a085ade"
       },
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
       "tags": [
-        "strategy",
-        "gtm",
-        "product",
-        "m-and-a"
+        "strategy-review",
+        "adversarial-review"
       ]
     }
   ]

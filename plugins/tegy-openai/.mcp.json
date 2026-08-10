@@ -4,13 +4,7 @@
       "type": "http",
       "url": "https://mcp.tegy.io/mcp",
       "oauth_resource": "https://mcp.tegy.io/mcp",
-      "scopes": [
-        "tegy:account:read",
-        "tegy:chat:read",
-        "tegy:chat:write",
-        "tegy:analysis:run",
-        "tegy:artifacts:write"
-      ]
+      "scopes": ["tegy:review:run"]
     }
   }
 }

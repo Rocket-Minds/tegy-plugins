@@ -3,24 +3,17 @@
 Official, reviewable plugins for using
 [Tegy](https://app.tegy.io/mcp) through its authenticated remote MCP service.
 
-Claude Code gets:
+Claude Code gets one focused command: `/tegy:review`.
 
-- `/tegy:advise`
-- `/tegy:gtm`
-- `/tegy:product`
-- `/tegy:ma`
-- `/tegy:handoff`
-
-ChatGPT and Codex get the same five workflows as `tegy-advise`, `tegy-gtm`,
-`tegy-product`, `tegy-ma`, and `tegy-handoff`, together with the registered
-Tegy MCP connection.
+ChatGPT and Codex get the same focused workflow as `$tegy-review`, together
+with the registered Tegy MCP connection.
 
 Both packages are declarative. The OpenAI package contains the registered app
 mapping plus a direct remote-MCP mapping so Codex accounts can complete Tegy
 OAuth independently. Neither package contains a local server, executable,
 hook, dependency, or installation script. Tegy's hosted service remains the
-product boundary for authentication, usage, durable chat state, StrategyOS
-behavior, exact uploads, and real assistant output.
+product boundary for authentication, review execution, and real assistant
+output.
 
 ## Claude
 
@@ -53,7 +46,9 @@ Then, optionally, add this marketplace and install the command pack:
 /reload-plugins
 ```
 
-Run `/tegy:advise <your strategy question>` or another explicit command.
+Run `/tegy:review` with an original brief and the complete strategy draft. The
+command asks for either input if it is absent; it never fills gaps from the
+surrounding conversation.
 
 ## ChatGPT
 
@@ -79,17 +74,16 @@ codex plugin marketplace add Rocket-Minds/tegy-plugins
 codex plugin add tegy-openai@tegy
 ```
 
-Start a new thread after installation. Invoke a focused workflow explicitly,
-for example `$tegy-advise`, or ask Codex to use the Tegy plugin.
+Start a new thread after installation. Invoke `$tegy-review` explicitly, or
+ask Codex to use the Tegy plugin to review the brief and draft you supply.
 
 ## Privacy and billing boundary
 
-Only instructions and evidence explicitly sent to Tegy reach Tegy. The skills
-do not forward surrounding conversation or unselected local files. Exact local
-file upload is used only when the user selects a file and the host can access
-its raw bytes; otherwise the workflow says that exact upload is unavailable.
-Paid work uses the connected Tegy account's normal allowance; typed usage
-errors report the actual limit and reset instead of retrying silently.
+Only the original brief, strategy draft, optional review criteria, and optional
+evidence explicitly supplied to the command reach Tegy. The skills do not
+forward surrounding conversation, ambient files, or unselected local content.
+Tegy returns a bounded reviewer result; it does not rewrite the draft or create
+a replacement strategy.
 
 ## Source and validation
 

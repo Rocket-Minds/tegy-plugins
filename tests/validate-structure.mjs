@@ -17,9 +17,9 @@ const codexMarketplace = await readJson(".agents/plugins/marketplace.json")
 const readme = await readFile("README.md", "utf8")
 
 assert.equal(claudeManifest.name, "tegy")
-assert.equal(claudeManifest.version, "1.0.2")
+assert.equal(claudeManifest.version, "2.0.0")
 assert.equal(codexManifest.name, "tegy-openai")
-assert.equal(codexManifest.version, "1.1.3")
+assert.equal(codexManifest.version, "2.0.0")
 assert.equal(codexManifest.apps, "./.app.json")
 assert.equal(codexManifest.mcpServers, "./.mcp.json")
 assert.equal(codexManifest.skills, "./skills/")
@@ -40,13 +40,7 @@ assert.deepEqual(mcpManifest, {
   mcpServers: {
     "tegy-mcp": {
       oauth_resource: "https://mcp.tegy.io/mcp",
-      scopes: [
-        "tegy:account:read",
-        "tegy:chat:read",
-        "tegy:chat:write",
-        "tegy:analysis:run",
-        "tegy:artifacts:write",
-      ],
+      scopes: ["tegy:review:run"],
       type: "http",
       url: "https://mcp.tegy.io/mcp",
     },
@@ -84,8 +78,8 @@ assert.equal(
   "ON_INSTALL"
 )
 
-const expectedSkills = ["advise", "gtm", "product", "ma", "handoff"]
-const expectedOpenAiSkills = expectedSkills.map((name) => `tegy-${name}`)
+const expectedSkills = ["review"]
+const expectedOpenAiSkills = ["tegy-review"]
 const pluginFiles = [
   ...(await walk(claudeRoot)),
   ...(await walk(openAiRoot)),
@@ -106,6 +100,8 @@ assert.equal(
 assert.match(readme, /Connect the hosted Tegy service before/u)
 assert.match(readme, /An installed command pack is not proof/u)
 assert.match(readme, /Then, optionally, add this marketplace/u)
+assert.match(readme, /\/tegy:review/u)
+assert.match(readme, /\$tegy-review/u)
 
 for (const file of pluginFiles) {
   assert.equal(
@@ -128,43 +124,19 @@ for (const skillName of expectedSkills) {
 
   assert.match(source, /^---\n[\s\S]+?\n---\n/u)
   assert.match(source, /disable-model-invocation: true/u)
-  assert.match(source, /mcp__tegy__/u)
+  assert.match(source, /allowed-tools: mcp__tegy__review/u)
+  assert.doesNotMatch(source, /mcp__tegy__(?!review)/u)
   assert.match(source, /disallowed-tools:.*Bash/u)
   assert.match(source, /never\s+call Bash|do not call Bash/iu)
   assert.match(source, /\[Connect Tegy\]\(https:\/\/claude\.ai\/new\?/u)
   assert.match(source, /add Tegy, select \*\*Connect\*\*/u)
   assert.match(source, /enable Tegy in the Claude conversation/u)
   assert.match(source, /Stop without claiming that Tegy ran\./u)
-  assert.match(
-    source,
-    /(?:absent\s+from|not\s+present\s+in)\s+the\s+tool\s+result/u
-  )
+  assert.match(source, /original brief/u)
+  assert.match(source, /strategy draft/u)
+  assert.match(source, /data for Tegy to assess/u)
   assert.doesNotMatch(source, /\bnpx\b|\bnpm install\b|\bcurl\b/u)
 }
-
-for (const skillName of ["gtm", "product", "ma"]) {
-  const source = await readFile(
-    path.join(claudeRoot, "skills", skillName, "SKILL.md"),
-    "utf8"
-  )
-
-  assert.match(source, new RegExp(`capability: "${skillName}"`, "u"))
-  assert.match(source, /exact/u)
-  assert.match(source, /keyword/u)
-}
-
-const advise = await readFile(
-  path.join(claudeRoot, "skills", "advise", "SKILL.md"),
-  "utf8"
-)
-assert.match(advise, /capability: "advise"/u)
-
-const handoff = await readFile(
-  path.join(claudeRoot, "skills", "handoff", "SKILL.md"),
-  "utf8"
-)
-assert.match(handoff, /Do not infer/u)
-assert.match(handoff, /mcp__tegy__create_handoff/u)
 
 for (const skillName of expectedOpenAiSkills) {
   const source = await readFile(
@@ -173,29 +145,22 @@ for (const skillName of expectedOpenAiSkills) {
   )
 
   assert.match(source, new RegExp(`name: ${skillName}`, "u"))
-  assert.match(source, /`get_account`/u)
+  assert.match(source, /authenticated `review` action/u)
   assert.match(source, /the `tegy-mcp` MCP server/u)
   assert.match(source, /^---\n[\s\S]+?\n---\n/u)
+  assert.match(source, /original brief/u)
+  assert.match(source, /strategy draft/u)
   assert.doesNotMatch(source, /\[TODO:/u)
 }
 
-for (const skillName of ["tegy-gtm", "tegy-product", "tegy-ma"]) {
-  const source = await readFile(
-    path.join(openAiRoot, "skills", skillName, "SKILL.md"),
-    "utf8"
-  )
-  const capability = skillName.replace("tegy-", "")
-
-  assert.match(source, new RegExp(`capability: "${capability}"`, "u"))
-  assert.match(source, /keyword|matching words/u)
-}
-
 const reviewCases = await readJson("submission/openai/test-cases.json")
-assert.equal(reviewCases.positive?.length, 5)
+assert.equal(reviewCases.positive?.length, 2)
 assert.equal(reviewCases.negative?.length, 3)
+assert.match(JSON.stringify(reviewCases), /call only review/u)
+assert.doesNotMatch(JSON.stringify(reviewCases), /create_chat|start_turn|create_handoff/u)
 
 console.log(
-  "Tegy Claude/OpenAI plugin structure, capability routing, review cases, and no-executable checks passed."
+  "Tegy review-only Claude/OpenAI plugin structure, boundary, and no-executable checks passed."
 )
 
 async function readJson(file) {
