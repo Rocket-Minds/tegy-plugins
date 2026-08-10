@@ -1,7 +1,7 @@
 {
   "name": "tegy",
-  "description": "Explicit commands for running durable strategy work through Tegy's authenticated remote MCP service.",
-  "version": "1.0.2",
+  "description": "One explicit command for independently reviewing a supplied strategy draft through Tegy's authenticated remote MCP service.",
+  "version": "2.0.0",
   "author": {
     "name": "Rocket Minds"
   },
@@ -9,10 +9,8 @@
   "repository": "https://github.com/Rocket-Minds/tegy-plugins",
   "license": "MIT",
   "keywords": [
-    "strategy",
-    "gtm",
-    "product",
-    "m-and-a",
+    "strategy-review",
+    "adversarial-review",
     "tegy"
   ]
 }
