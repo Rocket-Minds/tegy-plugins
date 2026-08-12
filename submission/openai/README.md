@@ -16,9 +16,9 @@ submission.
 
 Suggested summary:
 
-> Independently review a supplied strategy draft against its original brief.
-> Tegy returns prioritized, anchored findings without rewriting the draft or
-> accessing ambient conversation or files.
+> Pressure-test a provisional strategy answer against its original brief.
+> Tegy returns prioritized, anchored findings for the client to consider
+> before it commits to a conclusion.
 
 ## Starter prompts
 
@@ -28,12 +28,11 @@ Suggested summary:
 
 ## Release notes
 
-Review-only MVP. Tegy provides one authenticated remote-MCP tool and one
-focused skill for independently reviewing a supplied strategy draft. The
-service accepts only the original brief, immutable draft, and optionally
-supplied review criteria or evidence. It returns only real hosted reviewer
-output with a verdict and prioritized, anchored findings; it does not rewrite
-the draft, create a new strategy, or access ambient context.
+Review-only MVP. Tegy provides one authenticated remote-MCP tool for
+pressure-testing a supplied strategy draft. The service accepts one original
+brief, immutable provisional draft, and optionally supplied review criteria or
+evidence in a single long-running call. It returns only real hosted reviewer
+output with a verdict and prioritized, anchored findings.
 
 ## Reviewer setup
 

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "tegy": {
+      "type": "http",
+      "url": "https://mcp.tegy.io/mcp",
+      "oauth": {
+        "scopes": "tegy:review:run"
+      },
+      "alwaysLoad": true,
+      "timeout": 2100000
+    }
+  }
+}

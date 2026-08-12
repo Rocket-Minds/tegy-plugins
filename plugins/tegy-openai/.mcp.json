@@ -4,7 +4,8 @@
       "type": "http",
       "url": "https://mcp.tegy.io/mcp",
       "oauth_resource": "https://mcp.tegy.io/mcp",
-      "scopes": ["tegy:review:run"]
+      "scopes": ["tegy:review:run"],
+      "tool_timeout_sec": 2100
     }
   }
 }
