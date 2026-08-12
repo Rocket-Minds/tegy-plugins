@@ -1,7 +1,7 @@
 {
   "name": "tegy-openai",
-  "version": "2.0.0",
-  "description": "Independent strategy-draft review through Tegy's authenticated remote service.",
+  "version": "3.0.0",
+  "description": "Independent strategy-draft review that may automatically consume Tegy allowance at an interview decision checkpoint.",
   "author": {
     "name": "Rocket Minds",
     "email": "admin@tegy.io",
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "Tegy",
     "shortDescription": "Independent review of a supplied strategy draft",
-    "longDescription": "Submit one strategy draft, its original brief, and optional bounded evidence to Tegy for an independent adversarial review. Tegy returns anchored, prioritized findings without rewriting the draft or accessing ambient files or chat context.",
+    "longDescription": "Submit one strategy draft, its original brief, and optional bounded evidence to Tegy for an independent adversarial review. In a strategy interview, one allowance-consuming review may run before the client revises its provisional answer and concludes.",
     "developerName": "Rocket Minds",
     "category": "Business & Operations",
     "capabilities": [
