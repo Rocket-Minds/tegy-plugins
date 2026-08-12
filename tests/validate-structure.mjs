@@ -81,20 +81,21 @@ assert.doesNotMatch(
 assert.equal(claudeMarketplace.name, "tegy")
 assert.equal(claudeMarketplace.plugins?.length, 1)
 assert.equal(claudeMarketplace.plugins[0]?.name, "tegy")
-assert.equal(
-  claudeMarketplace.plugins[0]?.version,
-  "2.0.0",
-  "The immutable Claude marketplace remains on v2 until the v3 payload commit has a stable SHA."
-)
+assert.equal(claudeMarketplace.plugins[0]?.version, claudeManifest.version)
 assert.match(
   claudeMarketplace.plugins[0]?.description ?? "",
-  /Independently review one supplied strategy draft/u
+  /allowance-consuming Tegy review/u
 )
 assert.equal(claudeMarketplace.plugins[0]?.source?.source, "git-subdir")
 assert.equal(claudeMarketplace.plugins[0]?.source?.path, "plugins/tegy")
 assert.match(
   claudeMarketplace.plugins[0]?.source?.sha ?? "",
   /^[0-9a-f]{40}$/u
+)
+assert.equal(
+  claudeMarketplace.plugins[0]?.source?.sha,
+  "c57d8259aaac9e5318e3215e1b6df13c4dd33e2e",
+  "Claude marketplace must pin the immutable v3 payload commit."
 )
 
 assert.equal(codexMarketplace.name, "tegy")
