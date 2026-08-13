@@ -1,7 +1,7 @@
 {
   "name": "tegy",
-  "description": "One bounded strategy-review skill that may automatically consume Tegy allowance at an interview decision checkpoint.",
-  "version": "3.0.0",
+  "description": "One explicit, blocking decision-review gate backed by Tegy's independent hosted reviewer.",
+  "version": "4.0.0",
   "author": {
     "name": "Rocket Minds"
   },

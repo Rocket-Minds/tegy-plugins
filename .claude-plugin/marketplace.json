@@ -5,19 +5,19 @@
     "email": "admin@tegy.io"
   },
   "metadata": {
-    "description": "Official, reviewable command adapters for Tegy's authenticated remote MCP service"
+    "description": "Explicit decision-review gates backed by Tegy's authenticated remote reviewer"
   },
   "plugins": [
     {
       "name": "tegy",
-      "description": "Pressure-test a provisional strategy answer with one allowance-consuming Tegy review before concluding.",
-      "version": "3.0.0",
+      "description": "Gate one complete decision candidate through an independent hosted Tegy review.",
+      "version": "4.0.0",
       "source": {
         "source": "git-subdir",
         "url": "Rocket-Minds/tegy-plugins",
         "path": "plugins/tegy",
         "ref": "main",
-        "sha": "c57d8259aaac9e5318e3215e1b6df13c4dd33e2e"
+        "sha": "083e3c4d52f244f3044897e092980e287fd5894a"
       },
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",

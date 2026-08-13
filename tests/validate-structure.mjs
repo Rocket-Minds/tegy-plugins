@@ -7,41 +7,48 @@ const openAiRoot = path.resolve("plugins/tegy-openai")
 const claudeManifest = await readJson(
   path.join(claudeRoot, ".claude-plugin/plugin.json")
 )
-const claudeMcpManifest = await readJson(
-  path.join(claudeRoot, ".mcp.json")
+const claudeMcpManifest = await readJson(path.join(claudeRoot, ".mcp.json"))
+const claudeSkill = await readFile(
+  path.join(claudeRoot, "skills", "review", "SKILL.md"),
+  "utf8"
 )
-const codexManifest = await readJson(
-  path.join(openAiRoot, ".codex-plugin/plugin.json")
-)
-const appManifest = await readJson(path.join(openAiRoot, ".app.json"))
-const mcpManifest = await readJson(path.join(openAiRoot, ".mcp.json"))
 const claudeRunner = await readFile(
   path.join(claudeRoot, "agents", "tegy-review-runner.md"),
   "utf8"
 )
+const codexManifest = await readJson(
+  path.join(openAiRoot, ".codex-plugin/plugin.json")
+)
+const codexMcpManifest = await readJson(path.join(openAiRoot, ".mcp.json"))
+const codexSkill = await readFile(
+  path.join(openAiRoot, "skills", "tegy-review", "SKILL.md"),
+  "utf8"
+)
+const codexSkillUi = await readFile(
+  path.join(openAiRoot, "skills", "tegy-review", "agents", "openai.yaml"),
+  "utf8"
+)
+const appManifest = await readJson(path.join(openAiRoot, ".app.json"))
 const claudeMarketplace = await readJson(".claude-plugin/marketplace.json")
 const codexMarketplace = await readJson(".agents/plugins/marketplace.json")
 const readme = await readFile("README.md", "utf8")
-const interviewEvalCases = await readJson("tests/interview-eval-cases.json")
+const reviewCases = await readJson("submission/openai/test-cases.json")
+const decisionGateEvalCases = await readJson(
+  "tests/decision-gate-eval-cases.json"
+)
 
 assert.equal(claudeManifest.name, "tegy")
-assert.equal(claudeManifest.version, "3.0.0")
-assert.match(claudeManifest.description, /automatically consume Tegy allowance/u)
+assert.equal(claudeManifest.version, "4.0.0")
+assert.match(claudeManifest.description, /explicit, blocking decision-review gate/u)
 assert.equal(codexManifest.name, "tegy-openai")
-assert.equal(codexManifest.version, "3.0.0")
-assert.match(codexManifest.description, /automatically consume Tegy allowance/u)
+assert.equal(codexManifest.version, "4.0.0")
+assert.match(codexManifest.description, /Explicit decision-review gate/u)
 assert.equal(codexManifest.apps, "./.app.json")
 assert.equal(codexManifest.mcpServers, "./.mcp.json")
 assert.equal(codexManifest.skills, "./skills/")
 assert.equal(codexManifest.interface?.developerName, "Rocket Minds")
-assert.equal(
-  codexManifest.interface?.privacyPolicyURL,
-  "https://app.tegy.io/privacy"
-)
-assert.equal(
-  codexManifest.interface?.termsOfServiceURL,
-  "https://app.tegy.io/terms"
-)
+assert.equal(codexManifest.interface?.privacyPolicyURL, "https://app.tegy.io/privacy")
+assert.equal(codexManifest.interface?.termsOfServiceURL, "https://app.tegy.io/terms")
 assert.equal(
   appManifest.apps?.tegy?.id,
   "asdk_app_6a692aff65c8819198d21196888695b4"
@@ -52,17 +59,14 @@ assert.deepEqual(claudeMcpManifest, {
     tegy: {
       type: "http",
       url: "https://mcp.tegy.io/mcp",
-      oauth: {
-        scopes: "tegy:review:run",
-      },
+      oauth: { scopes: "tegy:review:run" },
       alwaysLoad: true,
       timeout: 2_100_000,
     },
   },
 })
 assert.equal(Object.keys(claudeMcpManifest.mcpServers).length, 1)
-
-assert.deepEqual(mcpManifest, {
+assert.deepEqual(codexMcpManifest, {
   mcpServers: {
     "tegy-mcp": {
       oauth_resource: "https://mcp.tegy.io/mcp",
@@ -74,53 +78,90 @@ assert.deepEqual(mcpManifest, {
   },
 })
 assert.doesNotMatch(
-  JSON.stringify({ claudeMcpManifest, mcpManifest }),
+  JSON.stringify({ claudeMcpManifest, codexMcpManifest }),
   /bearer|command|env|header|token/iu
 )
 
 assert.equal(claudeMarketplace.name, "tegy")
 assert.equal(claudeMarketplace.plugins?.length, 1)
 assert.equal(claudeMarketplace.plugins[0]?.name, "tegy")
-assert.equal(claudeMarketplace.plugins[0]?.version, claudeManifest.version)
+assert.equal(claudeMarketplace.plugins[0]?.version, "4.0.0")
 assert.match(
   claudeMarketplace.plugins[0]?.description ?? "",
-  /allowance-consuming Tegy review/u
+  /Gate one complete decision candidate/u
 )
 assert.equal(claudeMarketplace.plugins[0]?.source?.source, "git-subdir")
 assert.equal(claudeMarketplace.plugins[0]?.source?.path, "plugins/tegy")
-assert.match(
-  claudeMarketplace.plugins[0]?.source?.sha ?? "",
-  /^[0-9a-f]{40}$/u
-)
 assert.equal(
   claudeMarketplace.plugins[0]?.source?.sha,
-  "c57d8259aaac9e5318e3215e1b6df13c4dd33e2e",
-  "Claude marketplace must pin the immutable v3 payload commit."
+  "083e3c4d52f244f3044897e092980e287fd5894a",
+  "Claude marketplace must pin the immutable v4 payload commit."
 )
-
 assert.equal(codexMarketplace.name, "tegy")
 assert.equal(codexMarketplace.plugins?.length, 1)
 assert.equal(codexMarketplace.plugins[0]?.name, "tegy-openai")
-assert.equal(codexMarketplace.plugins[0]?.version, codexManifest.version)
-assert.equal(
-  codexMarketplace.plugins[0]?.source?.path,
-  "./plugins/tegy-openai"
-)
-assert.equal(
-  codexMarketplace.plugins[0]?.policy?.installation,
-  "AVAILABLE"
-)
-assert.equal(
-  codexMarketplace.plugins[0]?.policy?.authentication,
-  "ON_INSTALL"
-)
+assert.equal(codexMarketplace.plugins[0]?.version, "4.0.0")
+assert.equal(codexMarketplace.plugins[0]?.source?.path, "./plugins/tegy-openai")
+assert.equal(codexMarketplace.plugins[0]?.policy?.installation, "AVAILABLE")
+assert.equal(codexMarketplace.plugins[0]?.policy?.authentication, "ON_INSTALL")
 
-const expectedSkills = ["review"]
-const expectedOpenAiSkills = ["tegy-review"]
-const pluginFiles = [
-  ...(await walk(claudeRoot)),
-  ...(await walk(openAiRoot)),
-]
+assert.match(claudeSkill, /^---\n[\s\S]+?\n---\n/u)
+assert.match(claudeSkill, /disable-model-invocation: true/u)
+assert.match(claudeSkill, /context: fork/u)
+assert.match(claudeSkill, /agent: tegy:tegy-review-runner/u)
+assert.match(claudeSkill, /background: false/u)
+assert.match(claudeSkill, /allowed-tools: mcp__plugin_tegy_tegy__review/u)
+assert.match(claudeSkill, /Run only when the user invokes \/tegy:review/u)
+assert.match(claudeSkill, /never invoke automatically/u)
+assert.match(claudeSkill, /The fork has no parent conversation history/u)
+assert.match(claudeSkill, /Call `mcp__plugin_tegy_tegy__review` exactly once/u)
+assert.match(claudeSkill, /Do\s+not send `action`, `review_id`/u)
+assert.match(claudeSkill, /Gate outcome: PASS/u)
+assert.match(claudeSkill, /Gate outcome: REVISE/u)
+assert.match(claudeSkill, /Gate outcome: BLOCK/u)
+assert.match(claudeSkill, /Gate outcome: NO RESULT/u)
+assert.match(claudeSkill, /Parent must not present the decision as final/u)
+assert.match(claudeSkill, /Assumptions and calculations/u)
+assert.match(claudeSkill, /Risks and reversal conditions/u)
+assert.match(claudeSkill, /Recovery idempotency key: <key>/u)
+assert.match(claudeSkill, /Terminal idempotency key: <key>/u)
+assert.match(claudeSkill, /request_cancelled` or `review_timeout/u)
+assert.doesNotMatch(claudeSkill, /mcp__tegy__review/u)
+assert.doesNotMatch(claudeSkill, /Mode: manual|Mode: automatic/u)
+assert.doesNotMatch(claudeSkill, /action:\s*["'`](?:start|get)/u)
+assert.doesNotMatch(claudeSkill, /retry_after|polling loop/iu)
+
+assert.match(claudeRunner, /^---\n[\s\S]+?\n---\n/u)
+assert.match(claudeRunner, /name: tegy-review-runner/u)
+assert.match(claudeRunner, /model: inherit/u)
+assert.match(claudeRunner, /maxTurns: 4/u)
+assert.match(claudeRunner, /tools:\n  - mcp__plugin_tegy_tegy__review/u)
+assert.match(claudeRunner, /Do not inspect\nother context/u)
+assert.match(claudeRunner, /Wait for the single call's terminal result/u)
+assert.match(claudeRunner, /PASS, REVISE, BLOCK, or\nNO RESULT/u)
+assert.doesNotMatch(claudeRunner, /mcp__(?!plugin_tegy_tegy__review)/u)
+
+assert.match(codexSkill, /^---\n[\s\S]+?\n---\n/u)
+assert.match(codexSkill, /Use only when the user explicitly invokes \$tegy-review/u)
+assert.match(codexSkill, /never invoke it implicitly/u)
+assert.match(codexSkill, /the `tegy-mcp` MCP server exactly\n   once/u)
+assert.match(codexSkill, /Do not send `action`, `review_id`/u)
+assert.match(codexSkill, /the decision gate passes/u)
+assert.match(codexSkill, /the gate does not pass/u)
+assert.match(codexSkill, /the gate blocks the decision/u)
+assert.match(codexSkill, /Gate outcome: NO RESULT/u)
+assert.match(codexSkill, /request_cancelled` or `review_timeout/u)
+assert.doesNotMatch(codexSkill, /Invoke automatically|automatic interview review/iu)
+assert.doesNotMatch(codexSkill, /action:\s*["'`](?:start|get)/u)
+assert.doesNotMatch(codexSkill, /retry_after|polling loop/iu)
+
+assert.match(codexSkillUi, /display_name: "Tegy Decision Review"/u)
+assert.match(codexSkillUi, /\$tegy-review/u)
+assert.match(codexSkillUi, /value: "tegy-mcp"/u)
+assert.match(codexSkillUi, /url: "https:\/\/mcp\.tegy\.io\/mcp"/u)
+assert.match(codexSkillUi, /allow_implicit_invocation: false/u)
+
+const pluginFiles = [...(await walk(claudeRoot)), ...(await walk(openAiRoot))]
 const forbiddenNames = new Set([
   ".lsp.json",
   "package.json",
@@ -128,37 +169,6 @@ const forbiddenNames = new Set([
   "hooks.json",
   "monitors.json",
 ])
-
-assert.match(readme, /sole Tegy MCP connection/u)
-assert.match(readme, /Installing the plugin does not prove/u)
-assert.match(readme, /at most one automatic Tegy review/u)
-assert.match(readme, /one long-running tool call/u)
-assert.match(readme, /Upgrading from 2\.0/u)
-assert.match(readme, /remove the manually added\n`tegy` server/u)
-assert.match(readme, /claude mcp remove tegy/u)
-assert.match(readme, /without a separate per-call permission prompt/u)
-assert.match(readme, /automatic review consumes Tegy allowance/iu)
-assert.match(readme, /Idempotency key: .*optional/u)
-assert.match(readme, /tests\/interview-eval-cases\.json/u)
-assert.match(readme, /Do not use an unverified\s+same-named server as a\s+fallback/u)
-assert.match(readme, /\/tegy:review/u)
-assert.match(readme, /\$tegy-review/u)
-
-assert.match(claudeRunner, /^---\n[\s\S]+?\n---\n/u)
-assert.match(claudeRunner, /name: tegy-review-runner/u)
-assert.match(claudeRunner, /model: inherit/u)
-assert.match(claudeRunner, /maxTurns: 4/u)
-assert.match(
-  claudeRunner,
-  /tools:\n  - mcp__plugin_tegy_tegy__review/u
-)
-assert.doesNotMatch(
-  claudeRunner,
-  /mcp__(?!plugin_tegy_tegy__review)/u
-)
-assert.match(claudeRunner, /Do not inspect other context/u)
-assert.match(claudeRunner, /Return the real tool result/u)
-
 for (const file of pluginFiles) {
   assert.equal(
     forbiddenNames.has(path.basename(file)),
@@ -172,105 +182,59 @@ for (const file of pluginFiles) {
   )
 }
 
-for (const skillName of expectedSkills) {
-  const source = await readFile(
-    path.join(claudeRoot, "skills", skillName, "SKILL.md"),
-    "utf8"
-  )
+assert.match(readme, /Tegy Review v4 is a decision gate/u)
+assert.match(readme, /One isolated runner makes one hosted review call/u)
+assert.match(readme, /A timeout is not approval or denial/u)
+assert.match(readme, /not native UI parity or a deterministic security guarantee/u)
+assert.match(readme, /Claude cannot invoke it implicitly/u)
+assert.match(readme, /allow_implicit_invocation: false/u)
+assert.match(readme, /The hosted review consumes Tegy allowance/u)
+assert.match(readme, /Upgrading from 2\.0 or 3\.0/u)
+assert.match(readme, /remove the manually added\n`tegy` server/u)
+assert.match(readme, /claude mcp remove tegy/u)
+assert.match(readme, /tests\/decision-gate-eval-cases\.json/u)
+assert.doesNotMatch(readme, /automatic interview review|may use the skill once/iu)
 
-  assert.match(source, /^---\n[\s\S]+?\n---\n/u)
-  assert.doesNotMatch(source, /disable-model-invocation/u)
-  assert.match(source, /context: fork/u)
-  assert.match(source, /agent: tegy:tegy-review-runner/u)
-  assert.match(source, /background: false/u)
-  assert.match(
-    source,
-    /allowed-tools: mcp__plugin_tegy_tegy__review/u
-  )
-  assert.doesNotMatch(source, /mcp__tegy__review/u)
-  assert.doesNotMatch(source, /disallowed-tools:/u)
-  assert.match(source, /At most once when Claude is the interviewee/u)
-  assert.match(source, /Call `mcp__plugin_tegy_tegy__review` exactly once/u)
-  assert.match(source, /Do not\s+send `action`, `review_id`/u)
-  assert.match(source, /\$ARGUMENTS/u)
-  assert.match(source, /The fork has no parent conversation history/u)
-  assert.match(source, /Parent action: revise the provisional answer/u)
-  assert.match(source, /packet's idempotency key when present/u)
-  assert.match(source, /Recovery idempotency key: <key>/u)
-  assert.match(source, /Terminal idempotency key: <key>/u)
-  assert.match(source, /request_cancelled` or `review_timeout/u)
-  assert.match(source, /new-key review requires an explicit new invocation/u)
-  assert.match(source, /without rewriting,\nsummarizing, or fabricating/u)
-  assert.match(source, /Stop without claiming\nthat Tegy ran/u)
-  assert.doesNotMatch(source, /\bnpx\b|\bnpm install\b|\bcurl\b/u)
-  assert.doesNotMatch(source, /action:\s*["'`](?:start|get)/u)
-  assert.doesNotMatch(source, /retry_after|polling loop/iu)
-}
-
-for (const skillName of expectedOpenAiSkills) {
-  const source = await readFile(
-    path.join(openAiRoot, "skills", skillName, "SKILL.md"),
-    "utf8"
-  )
-
-  assert.match(source, new RegExp(`name: ${skillName}`, "u"))
-  assert.match(source, /authenticated `review` tool/u)
-  assert.match(source, /the `tegy-mcp` MCP server/u)
-  assert.match(source, /^---\n[\s\S]+?\n---\n/u)
-  assert.match(source, /Call `review` exactly once/u)
-  assert.match(source, /Do not send `action`, `review_id`/u)
-  assert.match(source, /at most one automatic Tegy\nreview per case/u)
-  assert.match(source, /revise the candidate answer/u)
-  assert.match(source, /explicitly supplied idempotency key/u)
-  assert.match(source, /show the returned recovery guidance and the idempotency key/u)
-  assert.match(source, /request_cancelled` or `review_timeout/u)
-  assert.match(source, /new-key review\nrequires an explicit new invocation/u)
-  assert.doesNotMatch(source, /\[TODO:/u)
-  assert.doesNotMatch(source, /action:\s*["'`](?:start|get)/u)
-  assert.doesNotMatch(source, /retry_after|polling loop/iu)
-}
-
-const reviewCases = await readJson("submission/openai/test-cases.json")
 assert.equal(reviewCases.positive?.length, 2)
-assert.equal(reviewCases.negative?.length, 3)
+assert.equal(reviewCases.negative?.length, 4)
 assert.match(JSON.stringify(reviewCases), /call only review once/iu)
-assert.doesNotMatch(
-  JSON.stringify(reviewCases),
-  /Strategy interview decision checkpoint|Opening interview clarification/u
-)
+assert.match(JSON.stringify(reviewCases), /No implicit decision review/u)
 assert.doesNotMatch(
   JSON.stringify(reviewCases),
   /create_chat|start_turn|create_handoff|review_id|retry_after/iu
 )
 
-assert.deepEqual(interviewEvalCases.targets, ["claude-code", "codex"])
-assert.match(interviewEvalCases.environment?.treatment ?? "", /only the Tegy plugin/u)
-assert.match(interviewEvalCases.environment?.control ?? "", /without the Tegy plugin/u)
-assert.match(interviewEvalCases.environment?.privacy ?? "", /outside both client conversations/u)
-assert.equal(interviewEvalCases.cases?.length, 2)
-assert.equal(interviewEvalCases.cases[0]?.kind, "positive")
-assert.deepEqual(interviewEvalCases.cases[0]?.expected_trace, {
+assert.deepEqual(decisionGateEvalCases.targets, ["claude-code", "codex"])
+assert.match(decisionGateEvalCases.environment?.control ?? "", /weaker\/default host model/u)
+assert.match(decisionGateEvalCases.environment?.invocation ?? "", /Enter the treatment gate explicitly/u)
+assert.equal(
+  decisionGateEvalCases.evaluation?.primary_metric,
+  "critical decision-defect escape rate"
+)
+assert.match(decisionGateEvalCases.evaluation?.population ?? "", /held-out suite of multiple decision cases/u)
+assert.equal(decisionGateEvalCases.cases?.length, 3)
+assert.deepEqual(decisionGateEvalCases.cases[0]?.expected_trace, {
   skill_calls: 1,
   review_calls: 1,
   poll_calls: 0,
 })
-assert.equal(interviewEvalCases.cases[1]?.kind, "negative")
-assert.deepEqual(interviewEvalCases.cases[1]?.expected_trace, {
+assert.deepEqual(decisionGateEvalCases.cases[1]?.expected_trace, {
   skill_calls: 0,
   review_calls: 0,
   poll_calls: 0,
 })
-assert.match(
-  JSON.stringify(interviewEvalCases),
-  /Decision checkpoint invokes one review/u
-)
+assert.deepEqual(decisionGateEvalCases.cases[2]?.expected_trace, {
+  skill_calls: 1,
+  review_calls: 0,
+  poll_calls: 0,
+})
 assert.doesNotMatch(
-  JSON.stringify(interviewEvalCases),
+  JSON.stringify(decisionGateEvalCases),
   /create_chat|start_turn|create_handoff|review_id|retry_after/iu
 )
 
 console.log(
-  "Tegy v3 one-call Claude/Codex interview-review structure, boundary, recovery, and no-executable checks passed."
+  "Tegy v4 explicit Claude/Codex decision-gate structure, boundary, recovery, and no-executable checks passed."
 )
 
 async function readJson(file) {
@@ -279,16 +243,13 @@ async function readJson(file) {
 
 async function walk(directory) {
   const files = []
-
   for (const entry of await readdir(directory)) {
     const target = path.join(directory, entry)
-
     if ((await stat(target)).isDirectory()) {
       files.push(...(await walk(target)))
     } else {
       files.push(target)
     }
   }
-
   return files
 }

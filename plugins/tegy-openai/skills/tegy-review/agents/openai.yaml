@@ -1,0 +1,15 @@
+interface:
+  display_name: "Tegy Decision Review"
+  short_description: "Gate a decision through independent review"
+  default_prompt: "Use $tegy-review to review this complete decision packet before I present it."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "tegy-mcp"
+      description: "Tegy's independent hosted decision reviewer"
+      transport: "streamable_http"
+      url: "https://mcp.tegy.io/mcp"
+
+policy:
+  allow_implicit_invocation: false
