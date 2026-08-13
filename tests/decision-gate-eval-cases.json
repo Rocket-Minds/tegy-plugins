@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "targets": ["claude-code", "codex"],
+  "environment": {
+    "treatment": "Use a fresh client configuration with only the Tegy plugin enabled and its hosted review server authenticated.",
+    "control": "Use the same client, weaker/default host model, settings, prompt, and case data in a fresh configuration without the Tegy plugin.",
+    "privacy": "Keep evaluator reference material outside both client conversations and every Tegy review packet.",
+    "invocation": "Enter the treatment gate explicitly with /tegy:review in Claude Code or $tegy-review in Codex. Do not ask either host to infer the boundary."
+  },
+  "evaluation": {
+    "primary_metric": "critical decision-defect escape rate",
+    "secondary_metrics": [
+      "false block rate",
+      "material revision rate",
+      "review call count",
+      "poll call count"
+    ],
+    "population": "Use a preregistered held-out suite of multiple decision cases with seeded arithmetic, evidence, constraint, reversibility, and unsupported-assumption defects. Do not claim quality lift from one paired case."
+  },
+  "cases": [
+    {
+      "name": "Explicit complete packet enters one decision review",
+      "kind": "positive",
+      "claude_invocation": "/tegy:review",
+      "codex_invocation": "$tegy-review",
+      "prompt": "Original brief: Decide whether to buy 20 delivery vans for $4 million. Decision candidate: Approve the purchase now. Supporting rationale: Late deliveries indicate insufficient fleet capacity. Evidence: On-time delivery is 78% and orders grew 9%. Assumptions and calculations: The order growth caused the delivery decline; no ROI calculation was supplied. Alternatives considered: Route optimization was rejected without a trial. Material unknowns: Vehicle utilization and lateness causes are not supplied. Risks and reversal conditions: The purchase is difficult to reverse; no reversal condition was supplied.",
+      "expected_behavior": "Freeze the supplied fields, make one hosted review call, wait for its terminal result, and enforce PASS, REVISE, BLOCK, or NO RESULT before presenting a decision.",
+      "expected_trace": {
+        "skill_calls": 1,
+        "review_calls": 1,
+        "poll_calls": 0
+      }
+    },
+    {
+      "name": "Recommendation without explicit gate does not spend allowance",
+      "kind": "negative",
+      "prompt": "Recommend whether the company should buy the vans now.",
+      "expected_behavior": "Answer normally without invoking Tegy because the user did not enter the explicit decision gate.",
+      "expected_trace": {
+        "skill_calls": 0,
+        "review_calls": 0,
+        "poll_calls": 0
+      }
+    },
+    {
+      "name": "Incomplete explicit packet stops before hosted review",
+      "kind": "negative",
+      "claude_invocation": "/tegy:review",
+      "codex_invocation": "$tegy-review",
+      "prompt": "Original brief: Decide whether to buy the vans. Decision candidate: Approve it.",
+      "expected_behavior": "List every missing required packet field and make no hosted review call.",
+      "expected_trace": {
+        "skill_calls": 1,
+        "review_calls": 0,
+        "poll_calls": 0
+      }
+    }
+  ]
+}

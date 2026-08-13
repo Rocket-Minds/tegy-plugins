@@ -10,13 +10,15 @@ Both packages connect only to Tegy's hosted MCP endpoint at
 `tegy:review:run`. Authentication tokens remain in the host's credential
 storage and are not part of this repository.
 
-The skills send only the bounded review packet described in the README. They
+The skills send only the frozen decision packet described in the README. They
 must not send ambient files, whole conversations, inferred evidence, or other
-unselected content.
+unselected content. Invocation is explicit in both packages; ordinary analysis
+does not silently consume allowance or send content to Tegy.
 
 The Claude runner exposes only the plugin-qualified Tegy `review` tool. The
-plugin does not fall back to a manually configured same-named server because
-that name does not verify the remote endpoint.
+Codex skill disables implicit invocation in its host policy. The plugin does
+not fall back to a manually configured same-named server because that name does
+not verify the remote endpoint.
 
 Report a security issue privately to `admin@tegy.io`. Do not include access
 tokens, private strategy work, or credentials in a public issue.

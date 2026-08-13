@@ -16,23 +16,23 @@ submission.
 
 Suggested summary:
 
-> Pressure-test a provisional strategy answer against its original brief.
-> Tegy returns prioritized, anchored findings for the client to consider
-> before it commits to a conclusion.
+> Gate an explicit decision candidate through one independent hosted review.
+> Tegy returns a pass, revise, or block verdict with prioritized findings
+> before the client presents the decision.
 
 ## Starter prompts
 
-1. Review this strategy draft against its original brief.
-2. Find the material gaps in my go-to-market plan.
-3. Pressure-test this recommendation before I send it.
+1. Gate this complete decision packet before I present it.
+2. Review this recommendation and its assumptions.
+3. Check whether this decision is ready, needs revision, or is blocked.
 
 ## Release notes
 
-Review-only MVP. Tegy provides one authenticated remote-MCP tool for
-pressure-testing a supplied strategy draft. The service accepts one original
-brief, immutable provisional draft, and optionally supplied review criteria or
-evidence in a single long-running call. It returns only real hosted reviewer
-output with a verdict and prioritized, anchored findings.
+Explicit decision-gate release. Tegy provides one authenticated remote-MCP tool
+for reviewing a frozen decision packet. The client enters the gate explicitly,
+makes one long-running call without polling, waits for the terminal result, and
+enforces pass, revise, block, or no-result continuation behavior. The skill is
+not implicitly invoked during ordinary analysis or recommendations.
 
 ## Reviewer setup
 
@@ -51,7 +51,7 @@ sure the remote MCP connection can complete OAuth consent with the sole
 - Complete Rocket Minds developer or business identity verification.
 - Scan the production MCP metadata and verify that its tool snapshot contains
   only `review`.
-- Enter the two positive and three negative cases from `test-cases.json`.
+- Enter the two positive and four negative cases from `test-cases.json`.
 - Select only countries where Tegy's terms and support process are ready.
 - Enter the release notes above and complete policy attestations.
 - Submit for review. Approval does not publish automatically; publish the
