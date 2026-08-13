@@ -1,7 +1,7 @@
 {
   "name": "tegy-openai",
-  "version": "3.0.0",
-  "description": "Independent strategy-draft review that may automatically consume Tegy allowance at an interview decision checkpoint.",
+  "version": "4.0.0",
+  "description": "Explicit decision-review gate backed by Tegy's independent hosted reviewer.",
   "author": {
     "name": "Rocket Minds",
     "email": "admin@tegy.io",
@@ -20,8 +20,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Tegy",
-    "shortDescription": "Independent review of a supplied strategy draft",
-    "longDescription": "Submit one strategy draft, its original brief, and optional bounded evidence to Tegy for an independent adversarial review. In a strategy interview, one allowance-consuming review may run before the client revises its provisional answer and concludes.",
+    "shortDescription": "Explicit independent review before a decision",
+    "longDescription": "Select a decision boundary, submit one complete immutable decision packet, and wait for Tegy's independent reviewer before presenting the decision. The gate returns pass, revise, block, or no-result behavior and never invokes implicitly.",
     "developerName": "Rocket Minds",
     "category": "Business & Operations",
     "capabilities": [
@@ -31,9 +31,9 @@
     "privacyPolicyURL": "https://app.tegy.io/privacy",
     "termsOfServiceURL": "https://app.tegy.io/terms",
     "defaultPrompt": [
-      "Review this strategy draft against its brief",
-      "Find the material gaps in my go-to-market plan",
-      "Pressure-test this recommendation before I send it"
+      "Gate this complete decision packet before I present it",
+      "Review this recommendation and its assumptions",
+      "Check whether this decision is ready, needs revision, or is blocked"
     ],
     "brandColor": "#FE6C2D",
     "composerIcon": "./assets/tegy-mark.png",
