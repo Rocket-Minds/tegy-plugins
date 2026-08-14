@@ -16,6 +16,14 @@ const claudeRunner = await readFile(
   path.join(claudeRoot, "agents", "tegy-review-runner.md"),
   "utf8"
 )
+const claudeDecisionGateEvalPrompt = await readFile(
+  path.join(claudeRoot, "evals", "decision-gate", "prompt.md"),
+  "utf8"
+)
+const claudeDecisionGateEvalGrader = await readFile(
+  path.join(claudeRoot, "evals", "decision-gate", "graders", "criteria.md"),
+  "utf8"
+)
 const codexManifest = await readJson(
   path.join(openAiRoot, ".codex-plugin/plugin.json")
 )
@@ -140,6 +148,22 @@ assert.match(claudeRunner, /Do not inspect\nother context/u)
 assert.match(claudeRunner, /Wait for the single call's terminal result/u)
 assert.match(claudeRunner, /PASS, REVISE, BLOCK, or\nNO RESULT/u)
 assert.doesNotMatch(claudeRunner, /mcp__(?!plugin_tegy_tegy__review)/u)
+
+assert.match(claudeDecisionGateEvalPrompt, /^---\n[\s\S]+?\n---\n/u)
+assert.match(claudeDecisionGateEvalPrompt, /^\/tegy:review$/mu)
+assert.match(
+  claudeDecisionGateEvalPrompt,
+  /allowed_tools: \[Skill, mcp__plugin_tegy_tegy__review\]/u
+)
+assert.match(claudeDecisionGateEvalPrompt, /Decision candidate:/u)
+assert.match(claudeDecisionGateEvalPrompt, /Risks and reversal conditions:/u)
+assert.doesNotMatch(claudeDecisionGateEvalPrompt, /action:|review_id|poll/iu)
+assert.match(claudeDecisionGateEvalGrader, /type: llm/u)
+assert.match(claudeDecisionGateEvalGrader, /outcome of REVISE or BLOCK/u)
+assert.match(
+  claudeDecisionGateEvalGrader,
+  /six-month delivery cannot satisfy the\n   ten-week decision objective/u
+)
 
 assert.match(codexSkill, /^---\n[\s\S]+?\n---\n/u)
 assert.match(codexSkill, /Use only when the user explicitly invokes \$tegy-review/u)
