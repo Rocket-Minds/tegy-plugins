@@ -4,7 +4,7 @@
       "type": "http",
       "url": "https://mcp.tegy.io/mcp",
       "oauth": {
-        "scopes": "tegy:review:run"
+        "scopes": "tegy:review:run tegy:brief:run"
       },
       "alwaysLoad": true,
       "timeout": 2100000
