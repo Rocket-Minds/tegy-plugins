@@ -8,12 +8,24 @@ const claudeManifest = await readJson(
   path.join(claudeRoot, ".claude-plugin/plugin.json")
 )
 const claudeMcpManifest = await readJson(path.join(claudeRoot, ".mcp.json"))
-const claudeSkill = await readFile(
+const claudeReviewSkill = await readFile(
   path.join(claudeRoot, "skills", "review", "SKILL.md"),
   "utf8"
 )
-const claudeRunner = await readFile(
+const claudeBriefSkill = await readFile(
+  path.join(claudeRoot, "skills", "brief", "SKILL.md"),
+  "utf8"
+)
+const claudeSolveSkill = await readFile(
+  path.join(claudeRoot, "skills", "solve", "SKILL.md"),
+  "utf8"
+)
+const claudeReviewRunner = await readFile(
   path.join(claudeRoot, "agents", "tegy-review-runner.md"),
+  "utf8"
+)
+const claudeBriefRunner = await readFile(
+  path.join(claudeRoot, "agents", "tegy-brief-runner.md"),
   "utf8"
 )
 const claudeDecisionGateEvalPrompt = await readFile(
@@ -46,8 +58,8 @@ const decisionGateEvalCases = await readJson(
 )
 
 assert.equal(claudeManifest.name, "tegy")
-assert.equal(claudeManifest.version, "4.0.0")
-assert.match(claudeManifest.description, /explicit, blocking decision-review gate/u)
+assert.equal(claudeManifest.version, "5.0.0")
+assert.match(claudeManifest.description, /strategy solving.*decision review.*brief writing/u)
 assert.equal(codexManifest.name, "tegy-openai")
 assert.equal(codexManifest.version, "4.0.0")
 assert.match(codexManifest.description, /Explicit decision-review gate/u)
@@ -67,7 +79,7 @@ assert.deepEqual(claudeMcpManifest, {
     tegy: {
       type: "http",
       url: "https://mcp.tegy.io/mcp",
-      oauth: { scopes: "tegy:review:run" },
+      oauth: { scopes: "tegy:review:run tegy:brief:run" },
       alwaysLoad: true,
       timeout: 2_100_000,
     },
@@ -93,17 +105,17 @@ assert.doesNotMatch(
 assert.equal(claudeMarketplace.name, "tegy")
 assert.equal(claudeMarketplace.plugins?.length, 1)
 assert.equal(claudeMarketplace.plugins[0]?.name, "tegy")
-assert.equal(claudeMarketplace.plugins[0]?.version, "4.0.0")
+assert.equal(claudeMarketplace.plugins[0]?.version, "5.0.0")
 assert.match(
   claudeMarketplace.plugins[0]?.description ?? "",
-  /Gate one complete decision candidate/u
+  /strategy solving, decision review, and executive writing/u
 )
 assert.equal(claudeMarketplace.plugins[0]?.source?.source, "git-subdir")
 assert.equal(claudeMarketplace.plugins[0]?.source?.path, "plugins/tegy")
 assert.equal(
   claudeMarketplace.plugins[0]?.source?.sha,
-  "083e3c4d52f244f3044897e092980e287fd5894a",
-  "Claude marketplace must pin the immutable v4 payload commit."
+  "c7e55158d6f61e6ccf6bcaa097c3bd52e7031735",
+  "Claude marketplace must pin the immutable v5 payload commit."
 )
 assert.equal(codexMarketplace.name, "tegy")
 assert.equal(codexMarketplace.plugins?.length, 1)
@@ -113,41 +125,37 @@ assert.equal(codexMarketplace.plugins[0]?.source?.path, "./plugins/tegy-openai")
 assert.equal(codexMarketplace.plugins[0]?.policy?.installation, "AVAILABLE")
 assert.equal(codexMarketplace.plugins[0]?.policy?.authentication, "ON_INSTALL")
 
-assert.match(claudeSkill, /^---\n[\s\S]+?\n---\n/u)
-assert.match(claudeSkill, /disable-model-invocation: true/u)
-assert.match(claudeSkill, /context: fork/u)
-assert.match(claudeSkill, /agent: tegy:tegy-review-runner/u)
-assert.match(claudeSkill, /background: false/u)
-assert.match(claudeSkill, /allowed-tools: mcp__plugin_tegy_tegy__review/u)
-assert.match(claudeSkill, /Run only when the user invokes \/tegy:review/u)
-assert.match(claudeSkill, /never invoke automatically/u)
-assert.match(claudeSkill, /The fork has no parent conversation history/u)
-assert.match(claudeSkill, /Call `mcp__plugin_tegy_tegy__review` exactly once/u)
-assert.match(claudeSkill, /Do\s+not send `action`, `review_id`/u)
-assert.match(claudeSkill, /Gate outcome: PASS/u)
-assert.match(claudeSkill, /Gate outcome: REVISE/u)
-assert.match(claudeSkill, /Gate outcome: BLOCK/u)
-assert.match(claudeSkill, /Gate outcome: NO RESULT/u)
-assert.match(claudeSkill, /Parent must not present the decision as final/u)
-assert.match(claudeSkill, /Assumptions and calculations/u)
-assert.match(claudeSkill, /Risks and reversal conditions/u)
-assert.match(claudeSkill, /Recovery idempotency key: <key>/u)
-assert.match(claudeSkill, /Terminal idempotency key: <key>/u)
-assert.match(claudeSkill, /request_cancelled` or `review_timeout/u)
-assert.doesNotMatch(claudeSkill, /mcp__tegy__review/u)
-assert.doesNotMatch(claudeSkill, /Mode: manual|Mode: automatic/u)
-assert.doesNotMatch(claudeSkill, /action:\s*["'`](?:start|get)/u)
-assert.doesNotMatch(claudeSkill, /retry_after|polling loop/iu)
+for (const skill of [claudeReviewSkill, claudeBriefSkill, claudeSolveSkill]) {
+  assert.match(skill, /^---\n[\s\S]+?\n---\n/u)
+  assert.doesNotMatch(skill, /disable-model-invocation:\s*true/u)
+}
+assert.match(claudeReviewSkill, /context: fork/u)
+assert.match(claudeReviewSkill, /agent: tegy:tegy-review-runner/u)
+assert.match(claudeReviewSkill, /Call `mcp__plugin_tegy_tegy__review` once/u)
+assert.match(claudeReviewSkill, /Gate: PASS/u)
+assert.match(claudeReviewSkill, /Gate: REVISE/u)
+assert.match(claudeReviewSkill, /Gate: BLOCK/u)
+assert.match(claudeReviewSkill, /Gate: NO RESULT/u)
+assert.doesNotMatch(claudeReviewSkill, /action:|review_id|polling loop/iu)
 
-assert.match(claudeRunner, /^---\n[\s\S]+?\n---\n/u)
-assert.match(claudeRunner, /name: tegy-review-runner/u)
-assert.match(claudeRunner, /model: inherit/u)
-assert.match(claudeRunner, /maxTurns: 4/u)
-assert.match(claudeRunner, /tools:\n  - mcp__plugin_tegy_tegy__review/u)
-assert.match(claudeRunner, /Do not inspect\nother context/u)
-assert.match(claudeRunner, /Wait for the single call's terminal result/u)
-assert.match(claudeRunner, /PASS, REVISE, BLOCK, or\nNO RESULT/u)
-assert.doesNotMatch(claudeRunner, /mcp__(?!plugin_tegy_tegy__review)/u)
+assert.match(claudeBriefSkill, /context: fork/u)
+assert.match(claudeBriefSkill, /agent: tegy:tegy-brief-runner/u)
+assert.match(claudeBriefSkill, /Call `mcp__plugin_tegy_tegy__brief` once/u)
+assert.match(claudeBriefSkill, /Source text/u)
+assert.doesNotMatch(claudeBriefSkill, /mcp__plugin_tegy_tegy__review/u)
+
+assert.match(claudeSolveSkill, /Ask one highest-value question at a time/u)
+assert.match(claudeSolveSkill, /Agent\(tegy:tegy-review-runner\)/u)
+assert.match(claudeSolveSkill, /facts, assumptions, and\n+hypotheses/u)
+assert.match(claudeSolveSkill, /do not recommend early/u)
+assert.match(claudeSolveSkill, /delegate one frozen packet/u)
+
+assert.match(claudeReviewRunner, /^---\n[\s\S]+?\n---\n/u)
+assert.match(claudeReviewRunner, /tools:\n  - mcp__plugin_tegy_tegy__review/u)
+assert.match(claudeBriefRunner, /^---\n[\s\S]+?\n---\n/u)
+assert.match(claudeBriefRunner, /tools:\n  - mcp__plugin_tegy_tegy__brief/u)
+assert.doesNotMatch(claudeReviewRunner, /mcp__(?!plugin_tegy_tegy__review)/u)
+assert.doesNotMatch(claudeBriefRunner, /mcp__(?!plugin_tegy_tegy__brief)/u)
 
 assert.match(claudeDecisionGateEvalPrompt, /^---\n[\s\S]+?\n---\n/u)
 assert.match(claudeDecisionGateEvalPrompt, /^\/tegy:review$/mu)
@@ -206,18 +214,16 @@ for (const file of pluginFiles) {
   )
 }
 
-assert.match(readme, /Tegy Review v4 is a decision gate/u)
-assert.match(readme, /One isolated runner makes one hosted review call/u)
-assert.match(readme, /A timeout is not approval or denial/u)
-assert.match(readme, /not native UI parity or a deterministic security guarantee/u)
-assert.match(readme, /Claude cannot invoke it implicitly/u)
-assert.match(readme, /allow_implicit_invocation: false/u)
-assert.match(readme, /The hosted review consumes Tegy allowance/u)
-assert.match(readme, /Upgrading from 2\.0 or 3\.0/u)
-assert.match(readme, /remove the manually added\n`tegy` server/u)
+assert.match(readme, /\/tegy:solve/u)
+assert.match(readme, /\/tegy:review/u)
+assert.match(readme, /\/tegy:brief/u)
+assert.match(readme, /select each skill automatically/u)
+assert.match(readme, /asks one\n+decision-changing question at a time/u)
+assert.match(readme, /one hosted Review call/u)
+assert.match(readme, /one hosted Brief call/u)
+assert.match(readme, /Review and Brief consume Tegy allowance/u)
+assert.match(readme, /Older setup instructions/u)
 assert.match(readme, /claude mcp remove tegy/u)
-assert.match(readme, /tests\/decision-gate-eval-cases\.json/u)
-assert.doesNotMatch(readme, /automatic interview review|may use the skill once/iu)
 
 assert.equal(reviewCases.positive?.length, 2)
 assert.equal(reviewCases.negative?.length, 4)
@@ -228,29 +234,42 @@ assert.doesNotMatch(
   /create_chat|start_turn|create_handoff|review_id|retry_after/iu
 )
 
-assert.deepEqual(decisionGateEvalCases.targets, ["claude-code", "codex"])
+assert.deepEqual(decisionGateEvalCases.targets, ["claude-code"])
 assert.match(decisionGateEvalCases.environment?.control ?? "", /weaker\/default host model/u)
-assert.match(decisionGateEvalCases.environment?.invocation ?? "", /Enter the treatment gate explicitly/u)
+assert.match(decisionGateEvalCases.environment?.invocation ?? "", /automatic skill selection/u)
 assert.equal(
   decisionGateEvalCases.evaluation?.primary_metric,
   "critical decision-defect escape rate"
 )
-assert.match(decisionGateEvalCases.evaluation?.population ?? "", /held-out suite of multiple decision cases/u)
-assert.equal(decisionGateEvalCases.cases?.length, 3)
+assert.match(decisionGateEvalCases.evaluation?.population ?? "", /held-out suite of multiple decision/u)
+assert.equal(decisionGateEvalCases.cases?.length, 5)
 assert.deepEqual(decisionGateEvalCases.cases[0]?.expected_trace, {
-  skill_calls: 1,
-  review_calls: 1,
+  brief_calls: 0,
   poll_calls: 0,
-})
-assert.deepEqual(decisionGateEvalCases.cases[1]?.expected_trace, {
-  skill_calls: 0,
   review_calls: 0,
-  poll_calls: 0,
+  skill_calls: 1,
+  solve_calls: 1,
 })
 assert.deepEqual(decisionGateEvalCases.cases[2]?.expected_trace, {
-  skill_calls: 1,
-  review_calls: 0,
+  brief_calls: 0,
   poll_calls: 0,
+  review_calls: 1,
+  skill_calls: 1,
+  solve_calls: 0,
+})
+assert.deepEqual(decisionGateEvalCases.cases[3]?.expected_trace, {
+  brief_calls: 1,
+  poll_calls: 0,
+  review_calls: 0,
+  skill_calls: 1,
+  solve_calls: 0,
+})
+assert.deepEqual(decisionGateEvalCases.cases[4]?.expected_trace, {
+  brief_calls: 0,
+  poll_calls: 0,
+  review_calls: 0,
+  skill_calls: 0,
+  solve_calls: 0,
 })
 assert.doesNotMatch(
   JSON.stringify(decisionGateEvalCases),
@@ -258,7 +277,7 @@ assert.doesNotMatch(
 )
 
 console.log(
-  "Tegy v4 explicit Claude/Codex decision-gate structure, boundary, recovery, and no-executable checks passed."
+  "Tegy v5 Claude command routing, exact-tool boundary, and no-executable checks passed."
 )
 
 async function readJson(file) {

@@ -5,25 +5,26 @@
     "email": "admin@tegy.io"
   },
   "metadata": {
-    "description": "Explicit decision-review gates backed by Tegy's authenticated remote reviewer"
+    "description": "Solve decisions, review recommendations, and brief executives with Tegy"
   },
   "plugins": [
     {
       "name": "tegy",
-      "description": "Gate one complete decision candidate through an independent hosted Tegy review.",
-      "version": "4.0.0",
+      "description": "Three concise Claude commands for strategy solving, decision review, and executive writing.",
+      "version": "5.0.0",
       "source": {
         "source": "git-subdir",
         "url": "Rocket-Minds/tegy-plugins",
         "path": "plugins/tegy",
         "ref": "main",
-        "sha": "083e3c4d52f244f3044897e092980e287fd5894a"
+        "sha": "c7e55158d6f61e6ccf6bcaa097c3bd52e7031735"
       },
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
       "tags": [
+        "strategy",
         "strategy-review",
-        "adversarial-review"
+        "executive-writing"
       ]
     }
   ]

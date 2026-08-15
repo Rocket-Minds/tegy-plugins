@@ -1,7 +1,7 @@
 {
   "name": "tegy",
-  "description": "One explicit, blocking decision-review gate backed by Tegy's independent hosted reviewer.",
-  "version": "4.0.0",
+  "description": "Interactive strategy solving, independent decision review, and executive brief writing.",
+  "version": "5.0.0",
   "author": {
     "name": "Rocket Minds"
   },
@@ -9,7 +9,8 @@
   "repository": "https://github.com/Rocket-Minds/tegy-plugins",
   "license": "MIT",
   "keywords": [
-    "strategy-review",
+    "strategy",
+    "executive-writing",
     "adversarial-review",
     "tegy"
   ]

@@ -1,57 +1,87 @@
 {
-  "version": 1,
-  "targets": ["claude-code", "codex"],
+  "version": 2,
+  "targets": ["claude-code"],
   "environment": {
-    "treatment": "Use a fresh client configuration with only the Tegy plugin enabled and its hosted review server authenticated.",
-    "control": "Use the same client, weaker/default host model, settings, prompt, and case data in a fresh configuration without the Tegy plugin.",
-    "privacy": "Keep evaluator reference material outside both client conversations and every Tegy review packet.",
-    "invocation": "Enter the treatment gate explicitly with /tegy:review in Claude Code or $tegy-review in Codex. Do not ask either host to infer the boundary."
+    "treatment": "Use a fresh Claude Code configuration with only the Tegy plugin enabled and its hosted server authenticated.",
+    "control": "Use the same weaker/default host model, settings, prompt, and case data without the Tegy plugin.",
+    "privacy": "Keep evaluator reference material outside both conversations and every Tegy packet.",
+    "invocation": "Test automatic skill selection. Do not name a Tegy skill in the user prompt. Also verify all three manual commands appear in the slash picker."
   },
   "evaluation": {
     "primary_metric": "critical decision-defect escape rate",
     "secondary_metrics": [
-      "false block rate",
+      "routing accuracy",
+      "premature recommendation rate",
       "material revision rate",
       "review call count",
+      "brief call count",
       "poll call count"
     ],
-    "population": "Use a preregistered held-out suite of multiple decision cases with seeded arithmetic, evidence, constraint, reversibility, and unsupported-assumption defects. Do not claim quality lift from one paired case."
+    "population": "Use a preregistered held-out suite of multiple decision, completed-candidate, executive-editing, and negative cases. Do not claim quality lift from one paired case."
   },
   "cases": [
     {
-      "name": "Explicit complete packet enters one decision review",
+      "name": "Vague decision starts the Solve interview",
       "kind": "positive",
-      "claude_invocation": "/tegy:review",
-      "codex_invocation": "$tegy-review",
-      "prompt": "Original brief: Decide whether to buy 20 delivery vans for $4 million. Decision candidate: Approve the purchase now. Supporting rationale: Late deliveries indicate insufficient fleet capacity. Evidence: On-time delivery is 78% and orders grew 9%. Assumptions and calculations: The order growth caused the delivery decline; no ROI calculation was supplied. Alternatives considered: Route optimization was rejected without a trial. Material unknowns: Vehicle utilization and lateness causes are not supplied. Risks and reversal conditions: The purchase is difficult to reverse; no reversal condition was supplied.",
-      "expected_behavior": "Freeze the supplied fields, make one hosted review call, wait for its terminal result, and enforce PASS, REVISE, BLOCK, or NO RESULT before presenting a decision.",
+      "prompt": "Should we buy a regional delivery fleet this year?",
+      "expected_behavior": "Select Solve automatically, ask one decision-changing question, and make no recommendation or hosted review call yet.",
       "expected_trace": {
         "skill_calls": 1,
-        "review_calls": 1,
+        "solve_calls": 1,
+        "review_calls": 0,
+        "brief_calls": 0,
         "poll_calls": 0
       }
     },
     {
-      "name": "Recommendation without explicit gate does not spend allowance",
+      "name": "Solved candidate enters one Review gate",
+      "kind": "positive",
+      "prompt": "Continue from the completed interview and give me the final recommendation.",
+      "expected_behavior": "Solve freezes the completed candidate, delegates one Review, obeys the terminal gate, and never polls or starts a second review.",
+      "expected_trace": {
+        "skill_calls": 1,
+        "solve_calls": 1,
+        "review_calls": 1,
+        "brief_calls": 0,
+        "poll_calls": 0
+      }
+    },
+    {
+      "name": "Existing decision candidate selects Review",
+      "kind": "positive",
+      "prompt": "Check this completed decision before I send it. Original brief: decide whether to buy 20 vans. Candidate: approve the purchase now. Evidence: on-time delivery is 78 percent and orders grew 9 percent. Unknowns: utilization, lateness causes, ROI, and route-optimization impact.",
+      "expected_behavior": "Select Review automatically, make one hosted review call, and enforce its terminal outcome.",
+      "expected_trace": {
+        "skill_calls": 1,
+        "solve_calls": 0,
+        "review_calls": 1,
+        "brief_calls": 0,
+        "poll_calls": 0
+      }
+    },
+    {
+      "name": "Executive rewrite selects Brief",
+      "kind": "positive",
+      "prompt": "Turn these notes into a short executive status update without changing the facts: launch moved to 18 September; migration is complete; support capacity remains unresolved; Maya owns the decision by Friday.",
+      "expected_behavior": "Select Brief automatically, make one hosted brief call, and return the terminal communication without strategic invention.",
+      "expected_trace": {
+        "skill_calls": 1,
+        "solve_calls": 0,
+        "review_calls": 0,
+        "brief_calls": 1,
+        "poll_calls": 0
+      }
+    },
+    {
+      "name": "Simple factual request selects no Tegy command",
       "kind": "negative",
-      "prompt": "Recommend whether the company should buy the vans now.",
-      "expected_behavior": "Answer normally without invoking Tegy because the user did not enter the explicit decision gate.",
+      "prompt": "What is 18 percent of 240?",
+      "expected_behavior": "Answer normally without loading Solve, Review, or Brief and without a hosted call.",
       "expected_trace": {
         "skill_calls": 0,
+        "solve_calls": 0,
         "review_calls": 0,
-        "poll_calls": 0
-      }
-    },
-    {
-      "name": "Incomplete explicit packet stops before hosted review",
-      "kind": "negative",
-      "claude_invocation": "/tegy:review",
-      "codex_invocation": "$tegy-review",
-      "prompt": "Original brief: Decide whether to buy the vans. Decision candidate: Approve it.",
-      "expected_behavior": "List every missing required packet field and make no hosted review call.",
-      "expected_trace": {
-        "skill_calls": 1,
-        "review_calls": 0,
+        "brief_calls": 0,
         "poll_calls": 0
       }
     }
