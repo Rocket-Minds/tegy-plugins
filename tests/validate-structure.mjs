@@ -105,7 +105,7 @@ assert.doesNotMatch(
 assert.equal(claudeMarketplace.name, "tegy")
 assert.equal(claudeMarketplace.plugins?.length, 1)
 assert.equal(claudeMarketplace.plugins[0]?.name, "tegy")
-assert.equal(claudeMarketplace.plugins[0]?.version, "5.0.0")
+assert.equal(claudeMarketplace.plugins[0]?.version, "5.0.1")
 assert.match(
   claudeMarketplace.plugins[0]?.description ?? "",
   /strategy solving, decision review, and executive writing/u
@@ -114,8 +114,8 @@ assert.equal(claudeMarketplace.plugins[0]?.source?.source, "git-subdir")
 assert.equal(claudeMarketplace.plugins[0]?.source?.path, "plugins/tegy")
 assert.equal(
   claudeMarketplace.plugins[0]?.source?.sha,
-  "c7e55158d6f61e6ccf6bcaa097c3bd52e7031735",
-  "Claude marketplace must pin the immutable v5 payload commit."
+  "19edcd1506ed5f2c7a537a4802a628bdc2153872",
+  "Claude marketplace must pin the immutable v5.0.1 payload commit."
 )
 assert.equal(codexMarketplace.name, "tegy")
 assert.equal(codexMarketplace.plugins?.length, 1)
