@@ -58,7 +58,7 @@ const decisionGateEvalCases = await readJson(
 )
 
 assert.equal(claudeManifest.name, "tegy")
-assert.equal(claudeManifest.version, "5.0.1")
+assert.equal(claudeManifest.version, "5.0.2")
 assert.match(claudeManifest.description, /strategy solving.*decision review.*brief writing/u)
 assert.equal(codexManifest.name, "tegy-openai")
 assert.equal(codexManifest.version, "4.0.0")
@@ -137,6 +137,8 @@ assert.match(
   /never recompute, correct, summarize, or normalize it/u
 )
 assert.match(claudeReviewSkill, /never call or retry the raw MCP review tool/u)
+assert.match(claudeReviewSkill, /relay its result verbatim/u)
+assert.match(claudeReviewSkill, /do not add an independent review or retry promise/u)
 assert.match(claudeReviewSkill, /Call `mcp__plugin_tegy_tegy__review` once/u)
 assert.match(claudeReviewSkill, /Gate: PASS/u)
 assert.match(claudeReviewSkill, /Gate: REVISE/u)
@@ -148,6 +150,7 @@ assert.match(claudeBriefSkill, /context: fork/u)
 assert.match(claudeBriefSkill, /agent: tegy:tegy-brief-runner/u)
 assert.match(claudeBriefSkill, /Call `mcp__plugin_tegy_tegy__brief` once/u)
 assert.match(claudeBriefSkill, /Source text/u)
+assert.match(claudeBriefSkill, /relay its result verbatim with nothing before or after it/u)
 assert.doesNotMatch(claudeBriefSkill, /mcp__plugin_tegy_tegy__review/u)
 
 assert.match(claudeSolveSkill, /Ask one highest-value question at a time/u)
