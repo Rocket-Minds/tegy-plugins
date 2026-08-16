@@ -58,7 +58,7 @@ const decisionGateEvalCases = await readJson(
 )
 
 assert.equal(claudeManifest.name, "tegy")
-assert.equal(claudeManifest.version, "5.0.0")
+assert.equal(claudeManifest.version, "5.0.1")
 assert.match(claudeManifest.description, /strategy solving.*decision review.*brief writing/u)
 assert.equal(codexManifest.name, "tegy-openai")
 assert.equal(codexManifest.version, "4.0.0")
@@ -131,6 +131,12 @@ for (const skill of [claudeReviewSkill, claudeBriefSkill, claudeSolveSkill]) {
 }
 assert.match(claudeReviewSkill, /context: fork/u)
 assert.match(claudeReviewSkill, /agent: tegy:tegy-review-runner/u)
+assert.match(claudeReviewSkill, /pass the complete current user packet verbatim/u)
+assert.match(
+  claudeReviewSkill,
+  /never recompute, correct, summarize, or normalize it/u
+)
+assert.match(claudeReviewSkill, /never call or retry the raw MCP review tool/u)
 assert.match(claudeReviewSkill, /Call `mcp__plugin_tegy_tegy__review` once/u)
 assert.match(claudeReviewSkill, /Gate: PASS/u)
 assert.match(claudeReviewSkill, /Gate: REVISE/u)

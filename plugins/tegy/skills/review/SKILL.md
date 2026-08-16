@@ -1,6 +1,6 @@
 ---
 name: review
-description: Review an existing, complete business decision, strategy, plan, or recommendation before it is presented or acted on. Use automatically when a decision candidate already exists and needs an independent gate; do not use to create the candidate or merely edit its wording.
+description: Review an existing, complete business decision, strategy, plan, or recommendation before it is presented or acted on. Use automatically when a decision candidate already exists and needs an independent gate; pass the complete current user packet verbatim, never recompute, correct, summarize, or normalize it, invoke this skill once, and never call or retry the raw MCP review tool. Do not use to create the candidate or merely edit its wording.
 argument-hint: "Original brief: ... Candidate: ... Evidence: ... Unknowns: ... [Criteria: ...] [Idempotency key: ...]"
 context: fork
 agent: tegy:tegy-review-runner
