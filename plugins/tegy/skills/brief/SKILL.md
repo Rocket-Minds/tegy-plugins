@@ -1,6 +1,6 @@
 ---
 name: brief
-description: Turn existing analysis, notes, technical text, or AI-drafted prose into concise executive communication. Use automatically when the requested outcome is an executive note, email, memo, status update, or slide-ready message; do not use to decide the underlying strategy.
+description: Turn existing analysis, notes, technical text, or AI-drafted prose into concise executive communication. Use automatically when the requested outcome is an executive note, email, memo, status update, or slide-ready message; after the skill returns, relay its result verbatim with nothing before or after it. Do not use to decide the underlying strategy.
 argument-hint: "Source text: ... [Purpose: ...] [Audience: ...] [Format: ...] [Constraints: ...] [Idempotency key: ...]"
 context: fork
 agent: tegy:tegy-brief-runner

@@ -58,7 +58,7 @@ const decisionGateEvalCases = await readJson(
 )
 
 assert.equal(claudeManifest.name, "tegy")
-assert.equal(claudeManifest.version, "5.0.1")
+assert.equal(claudeManifest.version, "5.0.2")
 assert.match(claudeManifest.description, /strategy solving.*decision review.*brief writing/u)
 assert.equal(codexManifest.name, "tegy-openai")
 assert.equal(codexManifest.version, "4.0.0")
@@ -105,7 +105,7 @@ assert.doesNotMatch(
 assert.equal(claudeMarketplace.name, "tegy")
 assert.equal(claudeMarketplace.plugins?.length, 1)
 assert.equal(claudeMarketplace.plugins[0]?.name, "tegy")
-assert.equal(claudeMarketplace.plugins[0]?.version, "5.0.1")
+assert.equal(claudeMarketplace.plugins[0]?.version, "5.0.2")
 assert.match(
   claudeMarketplace.plugins[0]?.description ?? "",
   /strategy solving, decision review, and executive writing/u
@@ -114,8 +114,8 @@ assert.equal(claudeMarketplace.plugins[0]?.source?.source, "git-subdir")
 assert.equal(claudeMarketplace.plugins[0]?.source?.path, "plugins/tegy")
 assert.equal(
   claudeMarketplace.plugins[0]?.source?.sha,
-  "19edcd1506ed5f2c7a537a4802a628bdc2153872",
-  "Claude marketplace must pin the immutable v5.0.1 payload commit."
+  "c3403e60abab2c918cece81efb530f3e83aa4c17",
+  "Claude marketplace must pin the immutable v5.0.2 payload commit."
 )
 assert.equal(codexMarketplace.name, "tegy")
 assert.equal(codexMarketplace.plugins?.length, 1)
@@ -137,6 +137,8 @@ assert.match(
   /never recompute, correct, summarize, or normalize it/u
 )
 assert.match(claudeReviewSkill, /never call or retry the raw MCP review tool/u)
+assert.match(claudeReviewSkill, /relay its result verbatim/u)
+assert.match(claudeReviewSkill, /do not add an independent review or retry promise/u)
 assert.match(claudeReviewSkill, /Call `mcp__plugin_tegy_tegy__review` once/u)
 assert.match(claudeReviewSkill, /Gate: PASS/u)
 assert.match(claudeReviewSkill, /Gate: REVISE/u)
@@ -148,6 +150,7 @@ assert.match(claudeBriefSkill, /context: fork/u)
 assert.match(claudeBriefSkill, /agent: tegy:tegy-brief-runner/u)
 assert.match(claudeBriefSkill, /Call `mcp__plugin_tegy_tegy__brief` once/u)
 assert.match(claudeBriefSkill, /Source text/u)
+assert.match(claudeBriefSkill, /relay its result verbatim with nothing before or after it/u)
 assert.doesNotMatch(claudeBriefSkill, /mcp__plugin_tegy_tegy__review/u)
 
 assert.match(claudeSolveSkill, /Ask one highest-value question at a time/u)
