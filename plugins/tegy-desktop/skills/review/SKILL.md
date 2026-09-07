@@ -4,7 +4,7 @@ description: Use Tegy to independently check an existing business decision, stra
 ---
 
 Send the original brief, current candidate, and relevant supplied evidence to
-Tegy's `review` tool with `delivery: "app"` and a fresh idempotency key. Preserve
+Tegy's `review` tool with a fresh idempotency key. Preserve
 the candidate and evidence; include known gaps. Ask for the brief or candidate
 if absent. Tegy cannot read this conversation, attachments, or links unless
 you supply their relevant contents.

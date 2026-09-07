@@ -4,7 +4,7 @@ description: Use Tegy to turn supplied text into clear executive communication w
 ---
 
 Send the supplied source text unchanged to Tegy's `brief` tool with
-`delivery: "app"` and a fresh idempotency key. Include any stated audience,
+a fresh idempotency key. Include any stated audience,
 purpose, format, and constraints. Ask for source material if absent. Tegy
 cannot read attachments or links unless you supply their relevant contents.
 

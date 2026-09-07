@@ -4,7 +4,7 @@ description: Use Tegy to solve a business or strategy problem and independently 
 ---
 
 Send the user's problem and relevant supplied context to Tegy's `solve` tool
-with `delivery: "app"` and a fresh idempotency key. Include material constraints
+with a fresh idempotency key. Include material constraints
 and unknowns without inventing facts. Tegy cannot read this conversation,
 attachments, or links unless you supply their relevant contents.
 
