@@ -1,0 +1,9 @@
+{
+  "name": "tegy",
+  "version": "6.0.0",
+  "description": "Solve business problems, review decisions, and write executive briefs with Tegy.",
+  "author": { "name": "RocketMinds" },
+  "homepage": "https://app.tegy.io/mcp",
+  "repository": "https://github.com/Rocket-Minds/tegy-plugins",
+  "license": "MIT"
+}

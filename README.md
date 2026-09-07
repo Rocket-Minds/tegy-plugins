@@ -16,6 +16,34 @@ The plugin is declarative: three short skills, two exact-tool runners, and one
 hosted MCP connection. It ships no executable, hook, dependency, or install
 script. Tegy's service owns OAuth, durable execution, and real model output.
 
+## Claude Desktop
+
+The Desktop package in `plugins/tegy-desktop` contains three skills and one
+hosted connection. It has no local executable or terminal setup.
+
+After uploading its ZIP in Claude's **Customize > Plugins**, open the plugin's
+**Connectors** tab, click **Connect**, and allow Tegy access in your browser.
+The plugin requests Solve, Review, and Brief permissions. It uses your Tegy
+account and plan allowance.
+
+Use the three skills from Claude's slash-command menu, or ask Claude to use
+Tegy in plain language. Desktop Solve sends your supplied business problem to
+Tegy's hosted consultant. Unlike the Claude Code version, it proceeds without
+a multi-turn interview. Review checks an existing decision, and Brief edits
+supplied text for an executive audience.
+
+Each request displays a live result card. Tegy continues working after Claude
+finishes its reply. You can leave and return to the conversation. The card
+shows the result and offers Markdown copy and download. **Discuss with Claude**
+puts the exact result in the message box for you to send.
+
+Only supplied content reaches Tegy. To use a link or attachment, Claude must
+read it and send the relevant contents. The hosted tools cannot fetch it.
+
+This package is separate from the Claude Code marketplace package. Do not
+replace the CLI package with it. Desktop delivery requires a host that supports
+MCP Apps. An organization admin may restrict plugin uploads or connectors.
+
 ## Install in Claude Code
 
 In a new Claude Code session:
