@@ -1,27 +1,6 @@
 ---
 name: brief
 description: Use Tegy to turn supplied text into clear executive communication while keeping its facts and uncertainty. Use for executive emails, updates, memos, and summaries, not for creating a strategy.
-hooks:
-  PostToolUse:
-    - matcher: "^mcp__Tegy_Cowork__(review|brief)$"
-      hooks:
-        - type: mcp_tool
-          server: Tegy_Cowork
-          tool: receive_result
-          input:
-            event: PostToolUse
-            session_id: "${session_id}"
-            receipt: "${tool_response}"
-          timeout: 270
-  Stop:
-    - hooks:
-        - type: mcp_tool
-          server: Tegy_Cowork
-          tool: receive_result
-          input:
-            event: Stop
-            session_id: "${session_id}"
-          timeout: 270
 ---
 
 Send the supplied source text unchanged to `mcp__Tegy_Cowork__brief` with

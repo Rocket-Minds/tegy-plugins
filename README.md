@@ -139,7 +139,7 @@ only the scopes for the hosted tools your integration uses. See the
 
 The Claude Code plugin is declarative: three skills, two tool runners, and one
 hosted MCP connection. It ships no executable, hook, dependency, or install
-script. The Cowork package uses skill-scoped native MCP hooks for delivery.
+script. The Cowork package uses one shared pair of native MCP hooks for delivery.
 
 ## Privacy and validation
 

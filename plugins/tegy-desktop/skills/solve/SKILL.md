@@ -1,27 +1,6 @@
 ---
 name: solve
 description: Solve or revise a business decision, strategy, plan, or recommendation through an interactive consulting interview, then independently review the completed candidate with Tegy. Not for merely reviewing an existing candidate or rewriting text.
-hooks:
-  PostToolUse:
-    - matcher: "^mcp__Tegy_Cowork__(review|brief)$"
-      hooks:
-        - type: mcp_tool
-          server: Tegy_Cowork
-          tool: receive_result
-          input:
-            event: PostToolUse
-            session_id: "${session_id}"
-            receipt: "${tool_response}"
-          timeout: 270
-  Stop:
-    - hooks:
-        - type: mcp_tool
-          server: Tegy_Cowork
-          tool: receive_result
-          input:
-            event: Stop
-            session_id: "${session_id}"
-          timeout: 270
 ---
 
 Own the interview and recommendation in Claude. Ask one highest-value question

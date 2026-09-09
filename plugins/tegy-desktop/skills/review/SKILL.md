@@ -1,27 +1,6 @@
 ---
 name: review
 description: Use Tegy to independently check an existing business decision, strategy, or plan before it is shared or acted on. Not for creating a plan or editing its wording.
-hooks:
-  PostToolUse:
-    - matcher: "^mcp__Tegy_Cowork__(review|brief)$"
-      hooks:
-        - type: mcp_tool
-          server: Tegy_Cowork
-          tool: receive_result
-          input:
-            event: PostToolUse
-            session_id: "${session_id}"
-            receipt: "${tool_response}"
-          timeout: 270
-  Stop:
-    - hooks:
-        - type: mcp_tool
-          server: Tegy_Cowork
-          tool: receive_result
-          input:
-            event: Stop
-            session_id: "${session_id}"
-          timeout: 270
 ---
 
 Send the original brief, current candidate, and relevant supplied evidence to
