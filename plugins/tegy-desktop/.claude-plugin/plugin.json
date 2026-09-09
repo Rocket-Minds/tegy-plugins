@@ -1,6 +1,6 @@
 {
   "name": "tegy",
-  "version": "6.2.0-beta.3",
+  "version": "6.2.0",
   "description": "Interactive strategy solving, independent decision review, and executive brief writing with Tegy.",
   "author": {
     "name": "RocketMinds"
