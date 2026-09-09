@@ -3,18 +3,13 @@
 Tegy gives Claude Code three consulting commands backed by
 [Tegy](https://app.tegy.io/mcp):
 
-- `/tegy:solve` interviews the user, builds a decision, and sends the finished
-  candidate through the Review gate.
-- `/tegy:review` independently checks an existing decision candidate.
-- `/tegy:brief` turns existing material into concise executive communication.
+- **Solve** (`/tegy:solve`): Solve a hard strategic problem from end to end.
+- **Review** (`/tegy:review`): Make an existing plan or analysis materially stronger.
+- **Brief** (`/tegy:brief`): Communicate the thinking as an executive summary.
 
 Claude may select each skill automatically from its description. Solve is for
 making a decision, Review is for gating an existing candidate, and Brief is for
 rewriting existing material without changing the underlying strategy.
-
-The plugin is declarative: three short skills, two exact-tool runners, and one
-hosted MCP connection. It ships no executable, hook, dependency, or install
-script. Tegy's service owns OAuth, durable execution, and real model output.
 
 ## Claude Desktop
 
@@ -55,8 +50,8 @@ In a new Claude Code session:
 ```
 
 Open `/mcp`, select the plugin-provided `tegy` server, and complete Tegy OAuth.
-The requested permissions are Review and Brief. After connecting, the `/`
-picker shows `/tegy:solve`, `/tegy:review`, and `/tegy:brief`.
+Allow the requested access. After connecting, the `/` picker shows
+`/tegy:solve`, `/tegy:review`, and `/tegy:brief`.
 
 Review and Brief consume Tegy allowance when their hosted tool runs. Solve asks
 questions without spending review allowance; it uses one Review only when a
@@ -113,6 +108,20 @@ install `tegy-openai@tegy`.
 
 Claude.ai and ChatGPT can connect directly to `https://mcp.tegy.io/mcp`, but a
 raw connector does not install the Claude Code skills.
+
+## Developer notes
+
+The Claude Code plugin requests Review and Brief permissions. This supports all
+three commands: `/tegy:solve` works through the problem in Claude, then calls
+hosted `review`. It does not call the separate hosted `solve` tool. Do not add
+`tegy:solve:run` to fix a supposed missing permission in this plugin.
+
+A direct MCP client that calls hosted `solve` does need that permission. Request
+only the scopes for the hosted tools your integration uses. See the
+[authorization contract](https://github.com/Rocket-Minds/tegy-io/blob/main/docs/mcp-bounded-commands.md#authorization).
+
+The plugin is declarative: three skills, two tool runners, and one hosted MCP
+connection. It ships no executable, hook, dependency, or install script.
 
 ## Privacy and validation
 
