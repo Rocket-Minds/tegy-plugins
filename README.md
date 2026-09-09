@@ -13,9 +13,9 @@ rewriting existing material without changing the underlying strategy.
 
 ## Claude Desktop
 
-The candidate Desktop package in `plugins/tegy-desktop` contains three skills
+The Desktop package in `plugins/tegy-desktop` contains three skills
 and one hosted connection. It has no local executable or terminal setup.
-It is not a published release until installation and live workflow checks pass.
+Download [Desktop v6.1.1](https://github.com/Rocket-Minds/tegy-plugins/releases/download/desktop-v6.1.1/tegy-desktop-6.1.1.zip).
 
 Upload its ZIP in **Customize > Plugins**, open the plugin's **Connectors** tab,
 select **Connect**, and review the requested access. The package uses Review
@@ -31,9 +31,10 @@ does not run plugin subagents, so its skill calls Review directly. Review and
 Brief use live result cards; only these hosted calls consume Tegy allowance.
 
 An accepted receipt is not a review. When the card is ready, select **Discuss
-result** to send the completed review into the conversation so Claude can apply
-it and finish the recommendation. This sends a message; it does not create an
-unsent draft. If the host lacks that action, paste the completed review.
+result** to bring the completed review into Claude. In the tested Desktop Chat host,
+this fills an unsent draft: send it so Claude can apply the findings and finish
+the recommendation. Other hosts may send the message immediately. If the host
+lacks that action, paste the completed review.
 The card can finish after Claude stops responding, but does not automatically
 resume Claude's reasoning. Never treat a pending review as approval.
 
