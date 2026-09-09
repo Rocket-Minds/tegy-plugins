@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "^mcp__Tegy_Cowork__(review|brief)$",
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "Tegy_Cowork",
+            "tool": "receive_result",
+            "input": {
+              "event": "PostToolUse",
+              "session_id": "${session_id}",
+              "receipt": "${tool_response}"
+            },
+            "timeout": 270
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "Tegy_Cowork",
+            "tool": "receive_result",
+            "input": {
+              "event": "Stop",
+              "session_id": "${session_id}"
+            },
+            "timeout": 270
+          }
+        ]
+      }
+    ]
+  }
+}
