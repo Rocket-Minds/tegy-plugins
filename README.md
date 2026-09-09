@@ -18,7 +18,9 @@ and one hosted connection. It has no local executable or terminal setup.
 It is not a published release until installation and live workflow checks pass.
 
 Upload its ZIP in **Customize > Plugins**, open the plugin's **Connectors** tab,
-select **Connect**, and allow Review and Brief access. On Team plans, an Owner
+select **Connect**, and review the requested access. The package uses Review
+and Brief; a shared Claude connector may also request Solve permission even
+though this plugin does not call it. On Team plans, an Owner
 must first register the package's `https://mcp.tegy.io/mcp?delivery=app` connection.
 An existing connector with a different URL does not register this connection.
 
