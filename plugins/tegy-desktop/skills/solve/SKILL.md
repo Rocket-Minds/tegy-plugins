@@ -33,7 +33,9 @@ Once the completed review is available in the conversation:
   changed. Do not claim that the corrected candidate passed another review.
 - `blocked`: ask for the missing evidence or choice instead of presenting a final.
 - tool failure or missing review: state NO RESULT and preserve the packet and key.
-  Ask whether to retry that identical packet or proceed explicitly without review.
+  Stop before showing the candidate, recommendation, or action plan. Ask whether
+  to retry that identical packet or proceed explicitly without review. Show an
+  unreviewed recommendation only after the user chooses to proceed without review.
 
 Do not call a second review automatically. Retry only when the user requests
 recovery, with the identical packet and key; never change input under an old key.
