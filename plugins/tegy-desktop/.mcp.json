@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "tegy": {
+    "Tegy_Cowork": {
       "type": "http",
-      "url": "https://mcp.tegy.io/mcp?delivery=app",
+      "url": "https://mcp.tegy.io/mcp?delivery=app&integration=cowork",
       "oauth": {
         "scopes": "tegy:review:run tegy:brief:run"
       }
