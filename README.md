@@ -11,6 +11,37 @@ Claude may select each skill automatically from its description. Solve is for
 making a decision, Review is for gating an existing candidate, and Brief is for
 rewriting existing material without changing the underlying strategy.
 
+## Claude Desktop
+
+The Desktop package in `plugins/tegy-desktop` contains three skills
+and one hosted connection. It has no local executable or terminal setup.
+Download [Desktop v6.1.1](https://github.com/Rocket-Minds/tegy-plugins/releases/download/desktop-v6.1.1/tegy-desktop-6.1.1.zip).
+
+Upload its ZIP in **Customize > Plugins**, open the plugin's **Connectors** tab,
+select **Connect**, and review the requested access. The package uses Review
+and Brief; a shared Claude connector may also request Solve permission even
+though this plugin does not call it. On Team plans, an Owner
+must first register the package's `https://mcp.tegy.io/mcp?delivery=app` connection.
+An existing connector with a different URL does not register this connection.
+
+Solve follows the same interview and independent-review sequence as Claude Code:
+Claude asks decision-changing questions and builds the candidate, then sends
+one frozen packet to hosted Review. It does not call hosted Solve. Desktop Chat
+does not run plugin subagents, so its skill calls Review directly. Review and
+Brief use live result cards; only these hosted calls consume Tegy allowance.
+
+An accepted receipt is not a review. When the card is ready, select **Discuss
+result** to bring the completed review into Claude. In the tested Desktop Chat host,
+this fills an unsent draft: send it so Claude can apply the findings and finish
+the recommendation. Other hosts may send the message immediately. If the host
+lacks that action, paste the completed review.
+The card can finish after Claude stops responding, but does not automatically
+resume Claude's reasoning. Never treat a pending review as approval.
+
+Only supplied packet content reaches Tegy. To use a link or attachment, Claude
+must read it and include the relevant content. The hosted tools cannot fetch it.
+This package is separate from the Claude Code package and requires MCP Apps.
+
 ## Install in Claude Code
 
 In a new Claude Code session:
