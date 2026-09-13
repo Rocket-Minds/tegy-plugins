@@ -16,12 +16,18 @@ rewriting existing material without changing the underlying strategy.
 Use the Desktop package in `plugins/tegy-desktop` in **Cowork**, not Chat.
 It has three skills, one hosted connection, and native delivery hooks.
 There is no terminal setup or local consulting process.
-Download the [Tegy plugin](https://github.com/Rocket-Minds/tegy-plugins/releases/download/desktop-v6.2.0/tegy-desktop-6.2.0.zip).
+Install **Tegy for Cowork** from the public Tegy marketplace:
 
-1. In Claude Desktop, select **Cowork** and upload the ZIP in **Customize > Plugins**.
-2. Open the plugin's **Connectors** tab, select **Connect**, and sign in to Tegy.
-3. Open the **Tegy Cowork** connector. Set **Receive Tegy result** to **Always allow**. Keep approval for Review and Brief separate if you want to approve each request.
-4. Start a new Cowork task, type `/`, and select **Solve**, **Review**, or **Brief** from the menu.
+1. In Claude Desktop, select **Cowork** and open **Customize > Plugins > Add > Add marketplace**.
+2. Paste `https://github.com/Rocket-Minds/tegy-plugins`, select **Sync**, then add **Tegy for Cowork**.
+3. Open the plugin's **Connectors** tab, select **Connect**, and sign in to Tegy.
+4. Open the **Tegy Cowork** connector. Set **Receive Tegy result** to **Always allow**. Keep approval for Review and Brief separate if you want to approve each request.
+5. Start a new Cowork task, type `/`, and select **Solve**, **Review**, or **Brief** from the menu.
+
+If you previously uploaded the ZIP, turn off that copy in **Plugins** to avoid
+duplicate skills and delivery hooks. To update the marketplace, open
+**Add > Manage marketplaces**, open the menu next to **tegy-plugins**, and
+select **Check for updates**.
 
 Keep Cowork open while Tegy works. The plugin waits for the result and returns
 it to Claude without a follow-up message. Claude applies Review findings before
