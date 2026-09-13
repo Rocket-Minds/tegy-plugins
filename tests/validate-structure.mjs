@@ -103,8 +103,9 @@ assert.doesNotMatch(
 )
 
 assert.equal(claudeMarketplace.name, "tegy")
-assert.equal(claudeMarketplace.plugins?.length, 1)
+assert.equal(claudeMarketplace.plugins?.length, 2)
 assert.equal(claudeMarketplace.plugins[0]?.name, "tegy")
+assert.equal(claudeMarketplace.plugins[0]?.displayName, "Tegy for Claude Code")
 assert.equal(claudeMarketplace.plugins[0]?.version, "5.0.2")
 assert.match(
   claudeMarketplace.plugins[0]?.description ?? "",
@@ -117,6 +118,17 @@ assert.equal(
   "c3403e60abab2c918cece81efb530f3e83aa4c17",
   "Claude marketplace must pin the immutable v5.0.2 payload commit."
 )
+const coworkEntry = claudeMarketplace.plugins.find(plugin => plugin.name === "tegy-cowork")
+const coworkManifest = await readJson("plugins/tegy-desktop/.claude-plugin/plugin.json")
+assert.equal(coworkEntry?.displayName, "Tegy for Cowork")
+assert.equal(coworkEntry?.version, coworkManifest.version)
+assert.deepEqual(coworkEntry?.source, {
+  source: "git-subdir",
+  url: "https://github.com/Rocket-Minds/tegy-plugins.git",
+  path: "plugins/tegy-desktop",
+  ref: "main",
+  sha: "7cf9dcf0734bddee8e9b97ffee4aaf931aa2e233",
+}, "The Cowork listing must install the published package with delivery hooks.")
 assert.equal(codexMarketplace.name, "tegy")
 assert.equal(codexMarketplace.plugins?.length, 1)
 assert.equal(codexMarketplace.plugins[0]?.name, "tegy-openai")
