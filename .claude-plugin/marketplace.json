@@ -32,13 +32,13 @@
       "name": "tegy-cowork",
       "displayName": "Tegy for Cowork",
       "description": "Solve business decisions, review recommendations, and write executive briefs in Cowork, with automatic result delivery.",
-      "version": "6.2.0",
+      "version": "6.2.1",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/Rocket-Minds/tegy-plugins.git",
         "path": "plugins/tegy-desktop",
         "ref": "main",
-        "sha": "7cf9dcf0734bddee8e9b97ffee4aaf931aa2e233"
+        "sha": "4512c2ebba897aa2f3407caee8add1039f8c3ce0"
       },
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",

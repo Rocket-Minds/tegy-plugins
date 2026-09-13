@@ -120,6 +120,7 @@ assert.equal(
 )
 const coworkEntry = claudeMarketplace.plugins.find(plugin => plugin.name === "tegy-cowork")
 const coworkManifest = await readJson("plugins/tegy-desktop/.claude-plugin/plugin.json")
+assert.equal(coworkEntry?.name, coworkManifest.name, "Cowork's picker and runtime must use the same command namespace.")
 assert.equal(coworkEntry?.displayName, "Tegy for Cowork")
 assert.equal(coworkEntry?.version, coworkManifest.version)
 assert.deepEqual(coworkEntry?.source, {
@@ -127,7 +128,7 @@ assert.deepEqual(coworkEntry?.source, {
   url: "https://github.com/Rocket-Minds/tegy-plugins.git",
   path: "plugins/tegy-desktop",
   ref: "main",
-  sha: "7cf9dcf0734bddee8e9b97ffee4aaf931aa2e233",
+  sha: "4512c2ebba897aa2f3407caee8add1039f8c3ce0",
 }, "The Cowork listing must install the published package with delivery hooks.")
 assert.equal(codexMarketplace.name, "tegy")
 assert.equal(codexMarketplace.plugins?.length, 1)
