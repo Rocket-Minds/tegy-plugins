@@ -4,7 +4,7 @@ import path from "node:path"
 
 const root = path.resolve(process.argv[2] ?? "plugins/tegy-desktop")
 const readJson = async file => JSON.parse(await readFile(path.join(root, file), "utf8"))
-assert.equal((await readJson(".claude-plugin/plugin.json")).name, "tegy")
+assert.equal((await readJson(".claude-plugin/plugin.json")).name, "tegy-cowork")
 assert.deepEqual(await files(root), [".claude-plugin/plugin.json", ".mcp.json", "hooks/hooks.json", "skills/brief/SKILL.md", "skills/review/SKILL.md", "skills/solve/SKILL.md"])
 assert.deepEqual(await readJson(".mcp.json"), { mcpServers: { Tegy_Cowork: { type: "http", url: "https://mcp.tegy.io/mcp?delivery=app&integration=cowork", oauth: { scopes: "tegy:review:run tegy:brief:run" } } } })
 const receiver = input => ({ type: "mcp_tool", server: "Tegy_Cowork", tool: "receive_result", input, timeout: 270 })
