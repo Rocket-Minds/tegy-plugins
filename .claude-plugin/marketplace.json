@@ -10,6 +10,7 @@
   "plugins": [
     {
       "name": "tegy",
+      "displayName": "Tegy for Claude Code",
       "description": "Three concise Claude commands for strategy solving, decision review, and executive writing.",
       "version": "5.0.2",
       "source": {
@@ -22,6 +23,27 @@
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
       "tags": [
+        "strategy",
+        "strategy-review",
+        "executive-writing"
+      ]
+    },
+    {
+      "name": "tegy-cowork",
+      "displayName": "Tegy for Cowork",
+      "description": "Solve business decisions, review recommendations, and write executive briefs in Cowork, with automatic result delivery.",
+      "version": "6.2.0",
+      "source": {
+        "source": "git-subdir",
+        "url": "Rocket-Minds/tegy-plugins",
+        "path": "plugins/tegy-desktop",
+        "ref": "main",
+        "sha": "7cf9dcf0734bddee8e9b97ffee4aaf931aa2e233"
+      },
+      "category": "productivity",
+      "homepage": "https://app.tegy.io/mcp",
+      "tags": [
+        "cowork",
         "strategy",
         "strategy-review",
         "executive-writing"
