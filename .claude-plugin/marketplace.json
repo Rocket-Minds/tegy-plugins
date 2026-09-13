@@ -15,7 +15,7 @@
       "version": "5.0.2",
       "source": {
         "source": "git-subdir",
-        "url": "Rocket-Minds/tegy-plugins",
+        "url": "https://github.com/Rocket-Minds/tegy-plugins.git",
         "path": "plugins/tegy",
         "ref": "main",
         "sha": "c3403e60abab2c918cece81efb530f3e83aa4c17"
@@ -35,7 +35,7 @@
       "version": "6.2.0",
       "source": {
         "source": "git-subdir",
-        "url": "Rocket-Minds/tegy-plugins",
+        "url": "https://github.com/Rocket-Minds/tegy-plugins.git",
         "path": "plugins/tegy-desktop",
         "ref": "main",
         "sha": "7cf9dcf0734bddee8e9b97ffee4aaf931aa2e233"

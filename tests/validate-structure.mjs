@@ -124,7 +124,7 @@ assert.equal(coworkEntry?.displayName, "Tegy for Cowork")
 assert.equal(coworkEntry?.version, coworkManifest.version)
 assert.deepEqual(coworkEntry?.source, {
   source: "git-subdir",
-  url: "Rocket-Minds/tegy-plugins",
+  url: "https://github.com/Rocket-Minds/tegy-plugins.git",
   path: "plugins/tegy-desktop",
   ref: "main",
   sha: "7cf9dcf0734bddee8e9b97ffee4aaf931aa2e233",
