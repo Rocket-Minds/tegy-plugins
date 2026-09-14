@@ -1,10 +1,10 @@
 {
   "name": "tegy-openai",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Explicit decision-review gate backed by Tegy's independent hosted reviewer.",
   "author": {
     "name": "Rocket Minds",
-    "email": "admin@tegy.io",
+    "email": "support@app.tegy.io",
     "url": "https://tegy.io/"
   },
   "homepage": "https://app.tegy.io/mcp",
