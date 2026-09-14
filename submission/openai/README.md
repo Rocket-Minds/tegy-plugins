@@ -9,7 +9,8 @@ submission.
 - Publisher: Rocket Minds
 - Category: Business & Operations
 - Website: https://tegy.io/
-- Setup and support: https://app.tegy.io/mcp and https://app.tegy.io/support
+- Setup: https://app.tegy.io/mcp
+- Support: https://help.tegy.io
 - Privacy: https://app.tegy.io/privacy
 - Terms: https://app.tegy.io/terms
 - Production MCP: https://mcp.tegy.io/mcp

@@ -123,6 +123,11 @@ optionally Purpose, Audience, Format, Constraints, and an Idempotency key. The
 isolated runner makes one hosted Brief call and returns only the finished
 communication.
 
+## Get help
+
+For installation, connection, account, or billing help, visit the
+[Tegy help center](https://help.tegy.io). You can use it without signing in.
+
 ## Other clients
 
 The Codex package remains the explicit `$tegy-review` decision gate. Add this
