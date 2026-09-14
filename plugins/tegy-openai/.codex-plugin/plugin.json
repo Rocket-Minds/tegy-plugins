@@ -1,6 +1,6 @@
 {
   "name": "tegy-openai",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Explicit decision-review gate backed by Tegy's independent hosted reviewer.",
   "author": {
     "name": "Rocket Minds",
