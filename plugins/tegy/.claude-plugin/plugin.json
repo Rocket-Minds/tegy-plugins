@@ -1,7 +1,7 @@
 {
   "name": "tegy",
   "description": "Interactive strategy solving, independent decision review, and executive brief writing.",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "author": {
     "name": "Rocket Minds"
   },
@@ -13,5 +13,10 @@
     "executive-writing",
     "adversarial-review",
     "tegy"
-  ]
+  ],
+  "icon": "assets/icon.svg",
+  "documentationUrl": "https://app.tegy.io/mcp",
+  "supportUrl": "https://help.tegy.io",
+  "privacyPolicyUrl": "https://app.tegy.io/privacy",
+  "termsOfServiceUrl": "https://app.tegy.io/terms"
 }
