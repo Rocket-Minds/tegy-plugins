@@ -12,13 +12,13 @@
       "name": "tegy",
       "displayName": "Tegy for Claude Code",
       "description": "Three concise Claude commands for strategy solving, decision review, and executive writing.",
-      "version": "5.0.2",
+      "version": "5.0.3",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/Rocket-Minds/tegy-plugins.git",
         "path": "plugins/tegy",
         "ref": "main",
-        "sha": "c3403e60abab2c918cece81efb530f3e83aa4c17"
+        "sha": "1c5f47c61a6878889c5b8dd5b0199586324549ee"
       },
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
@@ -32,13 +32,13 @@
       "name": "tegy-cowork",
       "displayName": "Tegy for Cowork",
       "description": "Solve business decisions, review recommendations, and write executive briefs in Cowork, with automatic result delivery.",
-      "version": "6.2.1",
+      "version": "6.2.2",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/Rocket-Minds/tegy-plugins.git",
         "path": "plugins/tegy-desktop",
         "ref": "main",
-        "sha": "4512c2ebba897aa2f3407caee8add1039f8c3ce0"
+        "sha": "1c5f47c61a6878889c5b8dd5b0199586324549ee"
       },
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
