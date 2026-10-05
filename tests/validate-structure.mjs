@@ -128,7 +128,7 @@ assert.deepEqual(coworkEntry?.source, {
   url: "https://github.com/Rocket-Minds/tegy-plugins.git",
   path: "plugins/tegy-desktop",
   ref: "main",
-  sha: "1c5f47c61a6878889c5b8dd5b0199586324549ee",
+  sha: "70a0c3765bede4bf6becec4ee67e0e06a00b7d32",
 }, "The Cowork listing must install the published package with delivery hooks.")
 assert.equal(codexMarketplace.name, "tegy")
 assert.equal(codexMarketplace.plugins?.length, 1)
