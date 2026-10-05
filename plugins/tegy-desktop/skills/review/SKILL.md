@@ -12,7 +12,9 @@ you supply their relevant contents.
 
 Cowork's hooks return the completed review into this task. A receipt is not a
 passed review. Apply supported findings to strengthen the candidate and explain
-what changed. Do not claim the corrected candidate passed another review. Ask
-for missing evidence if blocked. Do not poll, start another review, or invent
+what changed. Preserve the findings' conditions and uncertainty. Do not turn a
+possible extra cost, missing fact, or unverified assumption into a known fact.
+Do not claim the corrected candidate passed another review. Ask for missing
+evidence if blocked. Do not poll, start another review, or invent
 findings. If delivery fails, preserve the packet and key for recovery; do not
 present an unreviewed candidate as approved.
