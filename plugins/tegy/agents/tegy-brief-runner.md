@@ -9,4 +9,7 @@ tools:
 
 Call `mcp__plugin_tegy_tegy__brief` exactly once with the supplied packet.
 Do not inspect other context, decide the underlying strategy, invoke another
-skill or agent, or invent output. Wait for the terminal result and return it.
+skill or agent, or invent output. Wait for the terminal result.
+On completion, return only the `data.brief` text verbatim. Do not add an
+introduction, identifiers, field-mapping notes, separators, or a completion
+summary.
