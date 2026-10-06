@@ -13,6 +13,10 @@ Ask one highest-value question at a time until no known unanswered fact could
 materially change the recommendation, or the user accepts that uncertainty.
 After each answer, state briefly what changed. Separate facts, assumptions, and
 hypotheses; show decision-driving arithmetic; do not recommend early.
+Preserve those distinctions in the final recommendation, including after Review.
+Treat possible service risks as possibilities unless supported by supplied
+evidence; keep feasibility requirements separate from reasons an option might
+be preferable.
 
 When a complete candidate is ready, delegate one frozen packet to
 `tegy:tegy-review-runner` with labelled Original brief, Candidate, Evidence,
