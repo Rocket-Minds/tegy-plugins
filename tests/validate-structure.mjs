@@ -115,7 +115,7 @@ assert.equal(claudeMarketplace.plugins[0]?.source?.source, "git-subdir")
 assert.equal(claudeMarketplace.plugins[0]?.source?.path, "plugins/tegy")
 assert.equal(
   claudeMarketplace.plugins[0]?.source?.sha,
-  "d01b0a68c601212eac958871b135bf293593ec0b",
+  "c7850c9a2ca088cb07c02c749df9570f3886f069",
   "Claude marketplace must pin the immutable v5.0.5 payload commit."
 )
 const coworkEntry = claudeMarketplace.plugins.find(plugin => plugin.name === "tegy-cowork")
