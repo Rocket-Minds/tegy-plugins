@@ -12,13 +12,13 @@
       "name": "tegy",
       "displayName": "Tegy for Claude Code",
       "description": "Three concise Claude commands for strategy solving, decision review, and executive writing.",
-      "version": "5.0.4",
+      "version": "5.0.5",
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/Rocket-Minds/tegy-plugins.git",
         "path": "plugins/tegy",
         "ref": "main",
-        "sha": "c0b7fb3a9cad6012a8f71211dca849d0fdc637a3"
+        "sha": "c7850c9a2ca088cb07c02c749df9570f3886f069"
       },
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",

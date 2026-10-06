@@ -58,7 +58,7 @@ const decisionGateEvalCases = await readJson(
 )
 
 assert.equal(claudeManifest.name, "tegy")
-assert.equal(claudeManifest.version, "5.0.4")
+assert.equal(claudeManifest.version, "5.0.5")
 assert.match(claudeManifest.description, /strategy solving.*decision review.*brief writing/u)
 assert.equal(codexManifest.name, "tegy-openai")
 assert.equal(codexManifest.version, "4.0.2")
@@ -106,7 +106,7 @@ assert.equal(claudeMarketplace.name, "tegy")
 assert.equal(claudeMarketplace.plugins?.length, 2)
 assert.equal(claudeMarketplace.plugins[0]?.name, "tegy")
 assert.equal(claudeMarketplace.plugins[0]?.displayName, "Tegy for Claude Code")
-assert.equal(claudeMarketplace.plugins[0]?.version, "5.0.4")
+assert.equal(claudeMarketplace.plugins[0]?.version, "5.0.5")
 assert.match(
   claudeMarketplace.plugins[0]?.description ?? "",
   /strategy solving, decision review, and executive writing/u
@@ -115,8 +115,8 @@ assert.equal(claudeMarketplace.plugins[0]?.source?.source, "git-subdir")
 assert.equal(claudeMarketplace.plugins[0]?.source?.path, "plugins/tegy")
 assert.equal(
   claudeMarketplace.plugins[0]?.source?.sha,
-  "c0b7fb3a9cad6012a8f71211dca849d0fdc637a3",
-  "Claude marketplace must pin the immutable v5.0.4 payload commit."
+  "c7850c9a2ca088cb07c02c749df9570f3886f069",
+  "Claude marketplace must pin the immutable v5.0.5 payload commit."
 )
 const coworkEntry = claudeMarketplace.plugins.find(plugin => plugin.name === "tegy-cowork")
 const coworkManifest = await readJson("plugins/tegy-desktop/.claude-plugin/plugin.json")
