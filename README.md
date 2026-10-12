@@ -170,3 +170,19 @@ claude plugin validate ./plugins/tegy-desktop --strict
 
 See [app.tegy.io/mcp](https://app.tegy.io/mcp) for installation and connection
 management.
+
+## License and scope
+
+The plugin code, client-side skills, and documentation in this repository are
+available under the [MIT License](LICENSE), including commercial reuse under
+its terms.
+
+This license applies to the material in this repository. Tegy's separately
+hosted backend, private strategy runtime, and private knowledge sources are
+not part of this distribution. Access to the hosted Tegy service remains
+subject to its [service terms](https://tegy.io/terms) and account allowances.
+
+Keep this public package focused on installation, connections, and client
+interaction instructions. Substantive proprietary strategy methods, detailed
+review criteria, and private knowledge sources belong in the hosted service.
+Do not add those materials to this repository.
