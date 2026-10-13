@@ -1,7 +1,7 @@
 {
   "name": "tegy",
   "owner": {
-    "name": "Rocket Minds",
+    "name": "MGMJ Innovation Group LLC (Tegy)",
     "email": "admin@tegy.io"
   },
   "metadata": {
@@ -12,14 +12,8 @@
       "name": "tegy",
       "displayName": "Tegy for Claude Code",
       "description": "Three concise Claude commands for strategy solving, decision review, and executive writing.",
-      "version": "5.0.5",
-      "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/Rocket-Minds/tegy-plugins.git",
-        "path": "plugins/tegy",
-        "ref": "main",
-        "sha": "c7850c9a2ca088cb07c02c749df9570f3886f069"
-      },
+      "version": "6.0.0",
+      "source": "./plugins/tegy",
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
       "tags": [
@@ -31,15 +25,9 @@
     {
       "name": "tegy-cowork",
       "displayName": "Tegy for Cowork",
-      "description": "Solve business decisions, review recommendations, and write executive briefs in Cowork, with automatic result delivery.",
-      "version": "6.2.3",
-      "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/Rocket-Minds/tegy-plugins.git",
-        "path": "plugins/tegy-desktop",
-        "ref": "main",
-        "sha": "70a0c3765bede4bf6becec4ee67e0e06a00b7d32"
-      },
+      "description": "User-requested strategy solving, decision review, and executive briefs in Cowork, with live result cards.",
+      "version": "7.0.0",
+      "source": "./plugins/tegy-desktop",
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
       "tags": [
