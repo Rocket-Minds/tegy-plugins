@@ -1,70 +1,48 @@
 # Tegy plugins
 
-Tegy gives Claude Code three consulting commands backed by
-[Tegy](https://app.tegy.io/mcp):
+Tegy provides three consulting commands backed by [Tegy](https://app.tegy.io/mcp):
 
-- **Solve** (`/tegy:solve`): Solve a hard strategic problem from end to end.
-- **Review** (`/tegy:review`): Make an existing plan or analysis materially stronger.
-- **Brief** (`/tegy:brief`): Communicate the thinking as an executive summary.
+- **Solve**: work through a business decision in Claude, then approve sending a
+  finished candidate to Tegy for an independent review.
+- **Review**: ask Tegy for an independent review of a supplied decision packet.
+- **Brief**: ask Tegy to turn selected source text into an executive brief.
 
-Claude may select each skill automatically from its description. Solve is for
-making a decision, Review is for gating an existing candidate, and Brief is for
-rewriting existing material without changing the underlying strategy.
+Use a command or explicitly ask for Tegy. A request for an independent external
+review can also select Review. Ordinary business questions, emails, summaries,
+and status updates do not call Tegy. Hosted Review and Brief consume Tegy
+allowance; Claude's local interview does not. The host controls tool approval.
+
+The hosted service is operated by **MGMJ Innovation Group LLC**, under the
+Tegy by RocketMinds brand. See the [privacy notice](https://tegy.io/privacy).
 
 ## Claude Cowork
 
-Use the Desktop package in `plugins/tegy-desktop` in **Cowork**, not Chat.
-It has three skills, one hosted connection, and native delivery hooks.
-There is no terminal setup or local consulting process.
-Install **Tegy for Cowork** from the public Tegy marketplace:
+1. Open **Customize > Plugins > Add > Add marketplace** in Claude Cowork.
+2. Add `https://github.com/Rocket-Minds/tegy-plugins` and install **Tegy for Cowork**.
+3. Open its **Connectors** tab, select **Connect**, and complete Tegy OAuth.
+4. Start a new task and choose Solve, Review, or Brief from the slash menu,
+   or explicitly ask Claude to use Tegy.
 
-1. In Claude Desktop, select **Cowork** and open **Customize > Plugins > Add > Add marketplace**.
-2. Paste `https://github.com/Rocket-Minds/tegy-plugins`, select **Sync**, then add **Tegy for Cowork**.
-3. Open the plugin's **Connectors** tab, select **Connect**, and sign in to Tegy.
-4. Open the **Tegy Cowork** connector. Set **Receive Tegy result** to **Always allow**. Keep approval for Review and Brief separate if you want to approve each request.
-5. Start a new Cowork task, type `/`, and select **Solve**, **Review**, or **Brief** from the menu.
+The plugin sends one approved request. Its live result card shows progress and
+then the completed result. Select **Discuss result** to bring that result back
+into the task; send the draft if Claude places it in the composer. You can also
+use **View Markdown** and paste the result. Claude can then discuss the brief
+or apply the review findings. A receipt is not a completed review.
 
-If you previously uploaded the ZIP, turn off that copy in **Plugins** to avoid
-duplicate skills and delivery hooks. To update the marketplace, open
-**Add > Manage marketplaces**, open the menu next to **tegy-plugins**, and
-select **Check for updates**.
+There are no automatic hooks. Finishing an unrelated task sends nothing to
+Tegy, and a server response cannot restart the task. The result card reads only
+its accepted job through the authenticated connection; it does not send the
+conversation or a Claude session ID.
 
-Keep Cowork open while Tegy works. The plugin waits for the result and returns
-it to Claude without a follow-up message. Claude applies Review findings before
-finishing the recommendation. Brief returns the hosted text unchanged.
-A receipt is not a passed review. If the connection fails or access is denied,
-Claude must say that no review was received, not invent one.
+To update, use **Add > Manage marketplaces > tegy-plugins > Check for updates**.
+Disable any earlier uploaded ZIP to avoid running an old copy alongside this
+plugin. Remove any earlier Always allow rule for Receive Tegy result; this
+version does not use that tool.
 
-On Team and Enterprise plans, an Owner or Primary Owner must first register
-**Tegy Cowork** at
-`https://mcp.tegy.io/mcp?delivery=app&integration=cowork`.
-Keep this connection name: the hooks use it. An older Tegy connection with a
-different URL does not replace this one. The package requests Review and Brief;
-Claude's shared connector may also request Solve permission.
+For Team and Enterprise, an Owner or Primary Owner first registers **Tegy
+Cowork** at `https://mcp.tegy.io/mcp?delivery=app&integration=cowork`.
 
-Solve asks decision-changing questions and builds a candidate in Claude, then
-sends one frozen packet to hosted Review. It does not call hosted Solve.
-Only hosted calls consume Tegy allowance under the user's plan. Receiving an
-accepted result does not start or charge for another session.
-
-Only supplied packet content reaches Tegy. Claude must read links or attachments
-and include their relevant content. The hosted tools cannot fetch them.
-
-### Limits
-
-Automatic delivery requires Cowork hooks and an allowed, connected receiver.
-It cannot resume a closed host or bypass the host's continuation limits.
-The live card and an identical-request retry provide recovery without starting
-the same work twice. Do not retry a failed request with changed content under
-its old key.
-
-Desktop Chat does not run these hooks. A direct connector still offers a live
-result card, but the user must select **Discuss result** and send its draft to
-continue. Use Cowork for the automatic review gate.
-
-## Install in Claude Code
-
-In a new Claude Code session:
+## Claude Code
 
 ```text
 /plugin marketplace add Rocket-Minds/tegy-plugins
@@ -72,104 +50,91 @@ In a new Claude Code session:
 /reload-plugins
 ```
 
-Open `/mcp`, select the plugin-provided `tegy` server, and complete Tegy OAuth.
-Allow the requested access. After connecting, the `/` picker shows
-`/tegy:solve`, `/tegy:review`, and `/tegy:brief`.
+Open `/mcp`, select the plugin-provided Tegy server, and complete OAuth. Use
+`/tegy:solve`, `/tegy:review`, or `/tegy:brief`, or explicitly ask for Tegy.
+Review and Brief use isolated tool runners and return the completed response
+through the normal tool call. They do not pre-approve hosted calls or suppress
+Claude's own explanation. Solve asks one decision-changing question at a time
+and confirms the frozen packet with you before requesting Review.
 
-Review and Brief consume Tegy allowance when their hosted tool runs. Solve asks
-questions without spending review allowance; it uses one Review only when a
-complete decision candidate is ready.
+### Older setup instructions
 
-### Upgrading from older versions
+A manually added MCP server named `tegy` can hide the plugin's connection.
+Remove that older entry with `claude mcp remove tegy` in its original scope,
+reload plugins, and authenticate the plugin-provided server in `/mcp`.
 
-Older setup instructions added a separate MCP server named `tegy`. That entry
-can hide the plugin-provided server. Run `claude mcp remove tegy` in the scope
-where it was added, reload plugins, then authenticate the plugin-provided Tegy
-server in `/mcp`.
+## What is sent and when
 
-## Command behavior
+Connecting sends OAuth and MCP connection information needed to authenticate
+and discover tools. A hosted call then sends only the selected request fields:
 
-### Solve
+- Review: original brief, candidate and unknowns, supplied evidence, optional
+  criteria, and a random request key.
+- Brief: source text, optional purpose, audience, format and constraints, and
+  a random request key.
+- Solve: the same Review packet, after the user approves sending it.
+- Cowork result card: the accepted job ID when reading progress or the result.
 
-Use for a business decision, strategy, plan, or recommendation. Claude asks one
-decision-changing question at a time, distinguishes evidence from assumptions,
-updates its hypothesis, and avoids a premature recommendation. At the decision
-boundary, it freezes the brief, candidate, evidence, and unknowns for one
-independent Review. A PASS may be presented; REVISE is corrected; BLOCK returns
-to the missing evidence or choice.
+No skill sends an entire conversation, ambient files, or a Claude session ID.
+Source from a file or link must be selected for the request and included in the
+packet. Tegy cannot fetch that material itself. Authentication, connection and
+request identifiers, IP addresses, timing, usage and errors are processed as
+described in [privacy sections 2.3 and 2.4](https://tegy.io/privacy).
 
-### Review
-
-Use when a complete candidate already exists. Supply:
-
-```text
-Original brief: ...
-Candidate: ...
-Evidence: ...
-Unknowns: ...
-Criteria: ...        # optional
-Idempotency key: ... # optional; reuse only for identical recovery
-```
-
-The isolated runner makes one hosted Review call and returns its terminal result
-with PASS, REVISE, BLOCK, or NO RESULT. It does not poll or silently start a
-second paid review.
-
-### Brief
-
-Use to edit analysis, notes, technical prose, or an AI draft into an executive
-note, email, memo, status update, or slide-ready message. Supply Source text and
-optionally Purpose, Audience, Format, Constraints, and an Idempotency key. The
-isolated runner makes one hosted Brief call and returns only the finished
-communication.
-
-## Get help
-
-For installation, connection, account, or billing help, visit the
-[Tegy help center](https://help.tegy.io). You can use it without signing in.
+If a connection stops before the result arrives, preserve the exact packet and
+random key. Retry only when the user asks, using both unchanged to recover the
+same work. A changed packet needs a new key and may use more allowance. Never
+claim a recommendation passed Review unless its completed result says so.
 
 ## Other clients
 
-The Codex package remains the explicit `$tegy-review` decision gate. Add this
+The Codex package provides the explicit `$tegy-review` command. Add this
 marketplace with `codex plugin marketplace add Rocket-Minds/tegy-plugins`, then
-install `tegy-openai@tegy`.
+install `tegy-openai@tegy`. It requests only Review permission.
 
-Claude.ai and ChatGPT can connect directly to `https://mcp.tegy.io/mcp`, but a
-raw connector does not install the Claude Code skills.
+A direct Claude or ChatGPT connector does not install these client skills.
+See [app.tegy.io/mcp](https://app.tegy.io/mcp) for supported setup paths.
 
-## Developer notes
-
-The Claude Code plugin requests Review and Brief permissions. This supports all
-three commands: `/tegy:solve` works through the problem in Claude, then calls
-hosted `review`. It does not call the separate hosted `solve` tool. Do not add
-`tegy:solve:run` to fix a supposed missing permission in this plugin.
-
-A direct MCP client that calls hosted `solve` does need that permission. Request
-only the scopes for the hosted tools your integration uses. See the
-[authorization contract](https://github.com/Rocket-Minds/tegy-io/blob/main/docs/mcp-bounded-commands.md#authorization).
-
-The Claude Code plugin is declarative: three skills, two tool runners, and one
-hosted MCP connection. It ships no executable, hook, dependency, or install
-script. The Cowork package uses one shared pair of native MCP hooks for delivery.
-
-## Privacy and validation
-
-Review sends only its frozen decision packet. Brief sends only its labelled
-source packet. The plugin does not silently forward conversation history or
-ambient files.
-
-Validate locally with:
+## Validation
 
 ```bash
+claude plugin validate . --strict
 claude plugin validate ./plugins/tegy --strict
-python3 /path/to/plugin-creator/scripts/validate_plugin.py ./plugins/tegy-openai
+claude plugin validate ./plugins/tegy-desktop --strict
 node tests/validate-structure.mjs
 node tests/validate-desktop.mjs
-claude plugin validate ./plugins/tegy-desktop --strict
 ```
 
-See [app.tegy.io/mcp](https://app.tegy.io/mcp) for installation and connection
-management.
+Run the native [Claude plugin evals](https://code.claude.com/docs/en/plugin-evals)
+with synthetic tool responses:
+
+```bash
+claude plugin eval ./plugins/tegy --tag submission --ablation none --trust-plugin --no-publish
+claude plugin eval ./plugins/tegy-desktop --tag submission --ablation none --trust-plugin --no-publish
+```
+
+The fixtures expose all six tools using recorded public server definitions.
+They check ordinary requests, explicit Brief and external Review requests, and
+Solve consent. Mocked calls are automatically permitted by the eval harness:
+these runs prove instruction behavior, not OAuth or the real approval prompt.
+The Cowork package runs in Claude Code's harness here, not the Cowork host.
+Inspect the generated report and traces; do not rely only on its score.
+Refresh `evals/mocks/*/_tools.json` from `tools/list` when the server changes.
+
+Before release, run `tests/decision-gate-eval-cases.json` in each target host
+with synthetic material. Verify first-time OAuth and tool approval, completed
+results, the Cowork card's user-initiated return, and identical-key recovery.
+Record the package version and host; a fixture pass does not prove delivery.
+
+[Manufact publishing checks](https://manufact.com/platform/publishing-checks)
+provide an independent audit of the live MCP endpoint. Connect a dedicated
+synthetic-test account, run the checklist for the target clients, and inspect
+its protocol, schema, resource, CSP and compatibility findings. Record the
+endpoint and run time. Its MCP audit does not inspect these installed skill
+instructions or replace the target-host journeys. Policy review is a separate
+check. A scanner pass does not guarantee directory acceptance.
+
+For account or installation help, visit [help.tegy.io](https://help.tegy.io).
 
 ## License and scope
 

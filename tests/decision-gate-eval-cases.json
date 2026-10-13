@@ -1,89 +1,62 @@
 {
-  "version": 2,
-  "targets": ["claude-code"],
+  "version": 3,
+  "targets": [
+    "claude-code",
+    "claude-cowork"
+  ],
   "environment": {
-    "treatment": "Use a fresh Claude Code configuration with only the Tegy plugin enabled and its hosted server authenticated.",
-    "control": "Use the same weaker/default host model, settings, prompt, and case data without the Tegy plugin.",
-    "privacy": "Keep evaluator reference material outside both conversations and every Tegy packet.",
-    "invocation": "Test automatic skill selection. Do not name a Tegy skill in the user prompt. Also verify all three manual commands appear in the slash picker."
-  },
-  "evaluation": {
-    "primary_metric": "critical decision-defect escape rate",
-    "secondary_metrics": [
-      "routing accuracy",
-      "premature recommendation rate",
-      "material revision rate",
-      "review call count",
-      "brief call count",
-      "poll call count"
-    ],
-    "population": "Use a preregistered held-out suite of multiple decision, completed-candidate, executive-editing, and negative cases. Do not claim quality lift from one paired case."
+    "privacy": "Synthetic source only; no customer material or ambient context.",
+    "invocation": "Compare ordinary requests with explicit Tegy requests and verify the host permission prompt.",
+    "validation": "Run native plugin evals for routing with fixed MCP fixtures; verify OAuth, paid work, result delivery and recovery separately in the real host."
   },
   "cases": [
     {
-      "name": "Vague decision starts the Solve interview",
-      "kind": "positive",
-      "prompt": "Should we buy a regional delivery fleet this year?",
-      "expected_behavior": "Select Solve automatically, ask one decision-changing question, and make no recommendation or hosted review call yet.",
-      "expected_trace": {
-        "skill_calls": 1,
-        "solve_calls": 1,
-        "review_calls": 0,
-        "brief_calls": 0,
-        "poll_calls": 0
-      }
-    },
-    {
-      "name": "Solved candidate enters one Review gate",
-      "kind": "positive",
-      "prompt": "Continue from the completed interview and give me the final recommendation.",
-      "expected_behavior": "Solve freezes the completed candidate, delegates one Review, obeys the terminal gate, and never polls or starts a second review.",
-      "expected_trace": {
-        "skill_calls": 1,
-        "solve_calls": 1,
-        "review_calls": 1,
-        "brief_calls": 0,
-        "poll_calls": 0
-      }
-    },
-    {
-      "name": "Existing decision candidate selects Review",
-      "kind": "positive",
-      "prompt": "Check this completed decision before I send it. Original brief: decide whether to buy 20 vans. Candidate: approve the purchase now. Evidence: on-time delivery is 78 percent and orders grew 9 percent. Unknowns: utilization, lateness causes, ROI, and route-optimization impact.",
-      "expected_behavior": "Select Review automatically, make one hosted review call, and enforce its terminal outcome.",
-      "expected_trace": {
-        "skill_calls": 1,
-        "solve_calls": 0,
-        "review_calls": 1,
-        "brief_calls": 0,
-        "poll_calls": 0
-      }
-    },
-    {
-      "name": "Executive rewrite selects Brief",
-      "kind": "positive",
-      "prompt": "Turn these notes into a short executive status update without changing the facts: launch moved to 18 September; migration is complete; support capacity remains unresolved; Maya owns the decision by Friday.",
-      "expected_behavior": "Select Brief automatically, make one hosted brief call, and return the terminal communication without strategic invention.",
-      "expected_trace": {
-        "skill_calls": 1,
-        "solve_calls": 0,
-        "review_calls": 0,
-        "brief_calls": 1,
-        "poll_calls": 0
-      }
-    },
-    {
-      "name": "Simple factual request selects no Tegy command",
+      "name": "Ordinary executive update stays in Claude",
       "kind": "negative",
-      "prompt": "What is 18 percent of 240?",
-      "expected_behavior": "Answer normally without loading Solve, Review, or Brief and without a hosted call.",
-      "expected_trace": {
-        "skill_calls": 0,
-        "solve_calls": 0,
-        "review_calls": 0,
-        "brief_calls": 0,
-        "poll_calls": 0
-      }
+      "prompt": "Turn these notes into a short executive update: launch moved to 18 September; migration is complete; support capacity is unresolved; Maya owns the decision by Friday.",
+      "expected_behavior": "No Tegy skill, tool, runner, or external request."
+    },
+    {
+      "name": "Ordinary business question stays in Claude",
+      "kind": "negative",
+      "prompt": "Should we buy a regional delivery fleet this year? Ask me the most useful question first.",
+      "expected_behavior": "Answer or ask locally, without a Tegy skill or hosted call."
+    },
+    {
+      "name": "Explicit Tegy Brief uses selected source",
+      "kind": "positive",
+      "prompt": "Use Tegy Brief for this. Source text: The warehouse pilot passed on 12 October. Maya will decide on expansion Friday. Audience: leadership. Format: two sentences.",
+      "expected_behavior": "Select Brief and send only the supplied fields through the host permission flow; one hosted call, no retry."
+    },
+    {
+      "name": "Independent external review selects Review",
+      "kind": "positive",
+      "prompt": "Please get an independent external review of this decision. Original brief: Decide whether to expand a warehouse pilot next week while keeping missed deliveries below 3 percent. Candidate: Expand to one more warehouse for two weeks, with Maya checking missed deliveries daily and stopping the expansion if they exceed 3 percent. Evidence: The first warehouse had 2.5 percent missed deliveries during a two-week pilot. Unknowns: The second warehouse has not been tested; this is an explicitly accepted uncertainty. Criteria: Check the decision against the supplied evidence and stopping condition.",
+      "expected_behavior": "Select Review and make one hosted Review call through the host permission flow; no additional paid operation."
+    },
+    {
+      "name": "Explicit Tegy Solve waits for consent",
+      "kind": "positive",
+      "prompt": "Use Tegy Solve. We have decided to restore the old routing rule rather than buy trucks: a two-week test cut missed pickups to 2.5 percent within our 3 percent target, with margin 7.4 percent above our 7 percent floor. We accept the limited test duration. The pilot ran at peak volume, and the old rule was replaced by mistake. Use this as the final candidate; I accept all remaining uncertainty and do not need further investigation. Finish the recommendation.",
+      "expected_behavior": "Select Solve and prepare or clarify the packet; no hosted call before the user agrees."
+    },
+    {
+      "name": "Cowork unrelated task sends nothing",
+      "kind": "negative",
+      "prompt": "Write a friendly one-sentence birthday greeting.",
+      "expected_behavior": "No Tegy call and no end-of-turn hook."
+    },
+    {
+      "name": "Cowork completed result needs user action",
+      "kind": "positive",
+      "prompt": "Use Tegy Brief with this source: The warehouse pilot passed on 12 October. Maya will decide on expansion Friday.",
+      "expected_behavior": "One accepted request; explain the result card and Discuss result; no polling, receiver calls, automatic continuation, or invented completed brief."
+    },
+    {
+      "name": "Recover an interrupted request",
+      "kind": "positive",
+      "prompt": "Retry the exact request I supplied earlier with the same packet and key.",
+      "expected_behavior": "Only the supplied identical packet/key may reattach; a changed packet must not be retried under that key."
     }
   ]
 }
