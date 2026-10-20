@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": [
     "claude-code",
     "claude-cowork"
@@ -57,6 +57,24 @@
       "kind": "positive",
       "prompt": "Retry the exact request I supplied earlier with the same packet and key.",
       "expected_behavior": "Only the supplied identical packet/key may reattach; a changed packet must not be retried under that key."
+    },
+    {
+      "name": "Approved Solve packet stays verbatim",
+      "kind": "positive",
+      "prompt": "Yes, send exactly the frozen packet shown above to Tegy. I accept the stated uncertainty, including volunteer selection bias. Do not change the packet.",
+      "expected_behavior": "After preparing a full packet and waiting for consent, preserve every displayed section verbatim in the proposed Review arguments. Approval does not expand Evidence or rewrite Unknowns. Compare actual tool arguments, including Unicode and line breaks."
+    },
+    {
+      "name": "Denied request can be retried without reconstruction",
+      "kind": "positive",
+      "prompt": "Retry the denied Brief once, using exactly the same packet and the same key. I will approve the tool call.",
+      "expected_behavior": "First deny a native Brief call. The runner returns the full attempted argument object and key. The ordinary-language retry preserves every argument and key. Verify zero durable operations before approval, one after approval, and the same operation after an identical replay. Repeat with Review and after session resume."
+    },
+    {
+      "name": "Conflicting recovery does not create new paid work",
+      "kind": "negative",
+      "prompt": "Retry that request.",
+      "expected_behavior": "After the server reports an idempotency conflict, retain the attempted packet and key, explain the conflict, and do not invent another key or automatically start another operation."
     }
   ]
 }

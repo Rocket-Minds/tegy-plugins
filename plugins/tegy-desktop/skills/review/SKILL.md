@@ -11,6 +11,15 @@ the candidate and evidence; include known gaps. Ask for the brief or candidate
 if absent. Tegy cannot read this conversation, attachments, or links unless
 you supply their relevant contents.
 
+Before the first call, retain the complete `review` tool-argument object,
+including its random key. A supplied complete JSON object is already the
+packet: preserve every value and field's presence. Do not reword constraints,
+normalize punctuation or whitespace, or add unsupplied optional fields.
+On failure or denied permission, return the entire attempted object as JSON
+without abbreviation. User-requested recovery reuses that object and key.
+If the exact object is unavailable, ask for it and stop. Do not reconstruct it
+from a summary or generate a replacement key for a retry.
+
 The live result card shows progress and the completed review. A receipt is not
 a passed review. Explain that the user can select **Discuss result** in the
 finished card and send the draft if it opens in Claude's composer, or use
