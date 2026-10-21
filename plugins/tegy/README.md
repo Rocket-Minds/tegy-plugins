@@ -3,7 +3,7 @@
 Tegy helps you solve business decisions, independently review a supplied plan,
 and write executive briefs. The service is operated by **MGMJ Innovation Group
 LLC**, under the Tegy by RocketMinds brand. It requires a Tegy account with
-available allowance and an internet connection.
+eligible access and an internet connection.
 
 ## Connect and use
 
@@ -14,8 +14,9 @@ and summaries do not activate Tegy. An explicit independent external review
 request can select Review. The host controls permission for hosted calls.
 
 Solve interviews you locally and asks before sending its frozen candidate to
-Tegy. Review and Brief send your selected request to Tegy and consume Tegy
-allowance. A receipt is not a completed result. The completed result returns
+Tegy. Review uses Tegy allowance. Brief requires eligible Tegy access but does
+not consume a session. Both send only your selected request. A receipt is not
+a completed result. The completed result returns
 through the normal tool response. Claude can present and discuss it naturally.
 
 ## Data sent to Tegy
@@ -35,8 +36,10 @@ Tegy to process. The hosted tools cannot fetch it independently. Tegy also
 processes account, connection and request identifiers, IP addresses, timing,
 usage and error metadata as described in privacy sections 2.3 and 2.4.
 
-If the connection fails, keep the packet and key. A user-requested retry uses
-both unchanged to recover the same work; changing either may start paid work.
+If permission is denied or the connection fails, Claude is instructed to return
+the complete attempted packet and key as JSON. Keep it and ask to retry with
+that exact object and key to recover the same work. Changing the packet needs
+a new key and may start paid work.
 The tools do not make payments, send messages, or execute your business plan.
 
 ## Help and privacy

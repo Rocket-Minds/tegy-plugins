@@ -9,8 +9,9 @@ Tegy provides three consulting commands backed by [Tegy](https://app.tegy.io/mcp
 
 Use a command or explicitly ask for Tegy. A request for an independent external
 review can also select Review. Ordinary business questions, emails, summaries,
-and status updates do not call Tegy. Hosted Review and Brief consume Tegy
-allowance; Claude's local interview does not. The host controls tool approval.
+and status updates do not call Tegy. Hosted Review uses Tegy allowance; Brief
+requires eligible Tegy access but does not consume a session. Claude's local
+interview does not use Tegy allowance. The host controls tool approval.
 
 The hosted service is operated by **MGMJ Innovation Group LLC**, under the
 Tegy by RocketMinds brand. See the [privacy notice](https://tegy.io/privacy).
@@ -81,10 +82,12 @@ packet. Tegy cannot fetch that material itself. Authentication, connection and
 request identifiers, IP addresses, timing, usage and errors are processed as
 described in [privacy sections 2.3 and 2.4](https://tegy.io/privacy).
 
-If a connection stops before the result arrives, preserve the exact packet and
-random key. Retry only when the user asks, using both unchanged to recover the
-same work. A changed packet needs a new key and may use more allowance. Never
-claim a recommendation passed Review unless its completed result says so.
+If permission is denied or a connection stops before the result arrives, the
+instructions ask Claude to return the complete attempted packet and key as
+JSON. Keep it for recovery. Ask to retry with that exact object and key to
+recover the same work. A changed packet needs a new key and may use more
+allowance. Never claim a recommendation passed Review unless its completed
+result says so.
 
 ## Other clients
 
@@ -114,8 +117,9 @@ claude plugin eval ./plugins/tegy-desktop --tag submission --ablation none --tru
 ```
 
 The fixtures expose all six tools using recorded public server definitions.
-They check ordinary requests, explicit Brief and external Review requests, and
-Solve consent. Mocked calls are automatically permitted by the eval harness:
+They check ordinary requests, explicit Brief and external Review requests,
+Solve consent, exact packet recovery, and stopping after an idempotency
+conflict. Mocked calls are automatically permitted by the eval harness:
 these runs prove instruction behavior, not OAuth or the real approval prompt.
 The Cowork package runs in Claude Code's harness here, not the Cowork host.
 Inspect the generated report and traces; do not rely only on its score.
