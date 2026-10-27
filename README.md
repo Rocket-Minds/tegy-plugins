@@ -37,6 +37,7 @@ if you also have a manually configured Tegy connection.
 For Team and Enterprise, an Owner or Primary Owner must first register the
 plugin's Review-only endpoint:
 `https://mcp.tegy.io/mcp?integration=openai&delivery=text`.
+Keep the supplied connector name `Tegy_Review_Only` so it stays distinct from older Tegy connections.
 The profile is host independent; `integration=openai` selects the existing
 Review-only text surface. Both Claude packages use this same endpoint.
 

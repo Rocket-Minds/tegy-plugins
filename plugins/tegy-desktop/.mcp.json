@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "Tegy_Cowork": {
+    "Tegy_Review_Only": {
       "type": "http",
       "url": "https://mcp.tegy.io/mcp?integration=openai&delivery=text",
       "oauth": {

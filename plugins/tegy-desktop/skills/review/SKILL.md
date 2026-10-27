@@ -31,11 +31,11 @@ For a complete JSON object, use its values and field presence unchanged. Do not
 add headings, normalize punctuation or whitespace, or reword constraints. A
 retry must use the retained complete object and key. If that object is missing,
 ask for it; do not reconstruct it from a summary or mint a replacement key.
-Call this plugin connection's `review` tool (`mcp__Tegy_Cowork__review` in Cowork;
-`mcp__plugin_tegy-cowork_Tegy_Cowork__review` in Claude Code) once. If it returns
+Call this plugin connection's `review` tool (`mcp__Tegy_Review_Only__review` in Cowork;
+`mcp__plugin_tegy-cowork_Tegy_Review_Only__review` in Claude Code) once. If it returns
 an accepted or pending receipt, retain its `job_id` and call the matching
-`read_result` tool (`mcp__Tegy_Cowork__read_result` in Cowork;
-`mcp__plugin_tegy-cowork_Tegy_Cowork__read_result` in Claude Code) with only that
+`read_result` tool (`mcp__Tegy_Review_Only__read_result` in Cowork;
+`mcp__plugin_tegy-cowork_Tegy_Review_Only__read_result` in Claude Code) with only that
 ID. Repeat only while the result is pending, up to 24 reads in this
 invocation. Each read waits on the server; do not use sleep, scripts, background
 tasks, hooks, or another Review call to retrieve a result. A receipt is not a

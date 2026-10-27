@@ -16,6 +16,10 @@ external review. Supply the original brief and complete draft; evidence and
 criteria are optional. Ordinary business questions and writing requests stay
 in Claude. The host controls permission for hosted calls.
 
+Select the `Tegy_Review_Only` connector. On Team and Enterprise plans, an owner
+must register this plugin's connection first. Keep this name distinct from
+older Tegy connections so Claude selects the Review-only tools.
+
 The connection requests only `tegy:review:run` and exposes two tools: `review`
 and `read_result`. It uses `https://mcp.tegy.io/mcp?integration=openai&delivery=text`. This is the existing host-independent
 Review-only text profile; the `integration` parameter selects that tool surface.
