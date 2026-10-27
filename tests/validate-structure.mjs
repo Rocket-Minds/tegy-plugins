@@ -12,22 +12,6 @@ const claudeReviewSkill = await readFile(
   path.join(claudeRoot, "skills", "review", "SKILL.md"),
   "utf8"
 )
-const claudeBriefSkill = await readFile(
-  path.join(claudeRoot, "skills", "brief", "SKILL.md"),
-  "utf8"
-)
-const claudeSolveSkill = await readFile(
-  path.join(claudeRoot, "skills", "solve", "SKILL.md"),
-  "utf8"
-)
-const claudeReviewRunner = await readFile(
-  path.join(claudeRoot, "agents", "tegy-review-runner.md"),
-  "utf8"
-)
-const claudeBriefRunner = await readFile(
-  path.join(claudeRoot, "agents", "tegy-brief-runner.md"),
-  "utf8"
-)
 
 const codexManifest = await readJson(
   path.join(openAiRoot, ".codex-plugin/plugin.json")
@@ -51,7 +35,7 @@ const decisionGateEvalCases = await readJson(
 
 assert.equal(claudeManifest.name, "tegy")
 assert.match(claudeManifest.version, /^\d+\.\d+\.\d+$/u)
-assert.match(claudeManifest.description, /strategy solving.*decision review.*brief writing/u)
+assert.match(claudeManifest.description, /Independent review.*text results.*recovery/u)
 assert.equal(codexManifest.name, "tegy-openai")
 assert.equal(codexManifest.version, "4.0.2")
 assert.match(codexManifest.description, /Explicit decision-review gate/u)
@@ -70,8 +54,8 @@ assert.deepEqual(claudeMcpManifest, {
   mcpServers: {
     tegy: {
       type: "http",
-      url: "https://mcp.tegy.io/mcp",
-      oauth: { scopes: "tegy:review:run tegy:brief:run" },
+      url: "https://mcp.tegy.io/mcp?integration=openai&delivery=text",
+      oauth: { scopes: "tegy:review:run" },
       alwaysLoad: true,
       timeout: 2_100_000,
     },
@@ -113,15 +97,19 @@ assert.equal(codexMarketplace.plugins[0]?.source?.path, "./plugins/tegy-openai")
 assert.equal(codexMarketplace.plugins[0]?.policy?.installation, "AVAILABLE")
 assert.equal(codexMarketplace.plugins[0]?.policy?.authentication, "ON_INSTALL")
 
-for (const skill of [claudeReviewSkill, claudeBriefSkill, claudeSolveSkill]) {
+assert.deepEqual(await readdir(path.join(claudeRoot, "skills")), ["review"])
+assert.deepEqual(
+  (await walk(claudeRoot))
+    .map(file => path.relative(claudeRoot, file))
+    .filter(file => !file.startsWith("evals/"))
+    .sort(),
+  [".claude-plugin/plugin.json", ".mcp.json", "README.md", "assets/icon.svg", "skills/review/SKILL.md"]
+)
+for (const skill of [claudeReviewSkill]) {
   assert.match(skill, /^---\n[\s\S]+?\n---\n/u)
   const header = skill.split("\n---\n")[0]
   assert.doesNotMatch(header, /^allowed-tools:/mu, "Hosted calls must use the host's permission flow")
   assert.doesNotMatch(skill, /\$\{CLAUDE_SESSION_ID\}/u, "Request keys must not export Claude session IDs")
-}
-for (const [runner, tool] of [[claudeReviewRunner, "review"], [claudeBriefRunner, "brief"]]) {
-  const advertisedTools = runner.match(/^  - (mcp__.+)$/gmu) ?? []
-  assert.deepEqual(advertisedTools, [`  - mcp__plugin_tegy_tegy__${tool}`], "Runners may only call their own hosted operation")
 }
 assert.match(codexSkill, /^---\n[\s\S]+?\n---\n/u)
 assert.match(codexSkill, /Use only when the user explicitly invokes \$tegy-review/u)
@@ -172,7 +160,7 @@ assert.doesNotMatch(
 assert.deepEqual(decisionGateEvalCases.targets, ["claude-code", "claude-cowork"])
 assert.ok(decisionGateEvalCases.cases.some(item => item.kind === "negative"))
 assert.ok(decisionGateEvalCases.cases.some(item => item.kind === "positive"))
-console.log("Plugin package, consent, isolated-tool, and credential boundaries passed.")
+console.log("Plugin packages, Review-only permissions, and credential boundaries passed.")
 
 async function readJson(file) {
   return JSON.parse(await readFile(file, "utf8"))

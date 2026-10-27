@@ -2,4 +2,5 @@
 type: fixed
 error: true
 ---
-This synthetic request was not authorized. No work was started.
+
+{"ok": false, "code": "job_not_found", "message": "This synthetic job was not accepted by this connection."}

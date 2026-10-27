@@ -1,7 +1,7 @@
 {
   "name": "tegy-cowork",
-  "version": "7.0.1",
-  "description": "Interactive strategy solving, independent decision review, and executive brief writing with Tegy.",
+  "version": "8.0.0",
+  "description": "Independent review of a supplied business decision, with text results and recovery of an accepted review.",
   "author": {
     "name": "MGMJ Innovation Group LLC (Tegy)"
   },

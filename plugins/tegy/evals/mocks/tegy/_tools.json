@@ -1,76 +1,9 @@
 {
   "tools": [
     {
-      "name": "brief",
-      "title": "Write executive brief",
-      "description": "Use this when the user asks to turn supplied business text or notes into concise executive or customer communication, such as a board memo, project update, or customer email. Do not use for general-knowledge questions or ordinary conversation that the host can answer directly, even when Tegy is selected. Do not manufacture source text from the host answer just to call this tool. Preserve material facts and uncertainty; remove repetition and jargon. Uses only the supplied text; any inferred risk or assumption is tagged with a confidence level. Returns the terminal result of one durable request.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "audience": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          "constraints": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 10000
-          },
-          "format": {
-            "type": "string",
-            "enum": [
-              "executive-note",
-              "email",
-              "status-update",
-              "memo",
-              "slide"
-            ]
-          },
-          "idempotency_key": {
-            "type": "string",
-            "minLength": 8,
-            "maxLength": 160,
-            "description": "Reuse only when retrying this exact Brief request."
-          },
-          "purpose": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          "source_text": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 160000,
-            "description": "The complete source text to edit."
-          }
-        },
-        "required": [
-          "idempotency_key",
-          "source_text"
-        ],
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      },
-      "annotations": {
-        "readOnlyHint": false,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": false
-      },
-      "execution": {
-        "taskSupport": "forbidden"
-      },
-      "_meta": {
-        "anthropic/alwaysLoad": true,
-        "ui": {
-          "resourceUri": "ui://tegy/result-v2.html"
-        }
-      }
-    },
-    {
       "name": "review",
       "title": "Review strategy",
-      "description": "Independently review one supplied strategy draft. Tegy does not rewrite the draft, create a new strategy, or access ambient files or conversation context. Returns the terminal result of one durable request.",
+      "description": "Use this when the user requests an independent review of an existing business strategy or decision plan and supplies its original brief and complete draft. Do not use for standalone arithmetic questions, general questions, routine writing or editing, reminders, or creating a strategy. Ask for missing review inputs before calling; never invent a draft or substitute the question for it. Selecting or mentioning Tegy alone does not request a review. Tegy does not rewrite the draft or access ambient files or conversation context. Starts or reattaches to one durable review. If the result is pending, call read_result with its job_id until the review completes; do not start another review to retrieve its result.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -120,151 +53,12 @@
       },
       "execution": {
         "taskSupport": "forbidden"
-      },
-      "_meta": {
-        "anthropic/alwaysLoad": true,
-        "ui": {
-          "resourceUri": "ui://tegy/result-v2.html"
-        }
-      }
-    },
-    {
-      "name": "solve",
-      "title": "Solve strategic problem",
-      "description": "Solve one supplied strategic problem from end to end. Tegy proceeds without follow-up questions, labels material assumptions, independently challenges and critiques the answer, and returns a five-section report (Context; TL;DR with Next Steps; Fact Base; Risks; Key Assumptions) supported by the supplied context. No ambient files, attachments, history, or network access. Returns the terminal result of one durable request.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "constraints": {
-            "description": "Optional boundaries the solution must respect.",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 20000
-          },
-          "context": {
-            "description": "Optional facts, evidence, background, and known uncertainty.",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 100000
-          },
-          "idempotency_key": {
-            "type": "string",
-            "minLength": 8,
-            "maxLength": 160,
-            "description": "Reuse only when retrying this exact Solve packet."
-          },
-          "problem": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 40000,
-            "description": "The exact strategic problem or decision to solve."
-          },
-          "success_criteria": {
-            "description": "Optional criteria for a useful, decision-ready answer.",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 20000
-          }
-        },
-        "required": [
-          "idempotency_key",
-          "problem"
-        ],
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      },
-      "annotations": {
-        "readOnlyHint": false,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": false
-      },
-      "execution": {
-        "taskSupport": "forbidden"
-      },
-      "_meta": {
-        "anthropic/alwaysLoad": true,
-        "ui": {
-          "resourceUri": "ui://tegy/result-v2.html"
-        }
-      }
-    },
-    {
-      "name": "execute",
-      "title": "Prepare execution materials",
-      "description": "Turn one finished strategy into business-ready execution materials. Tegy takes the strategy as decided, assesses the operating implications against the stated ambition, prepares each requested material as one Markdown section (at most 3; for example a board pre-read, a kickoff agenda, an owner and milestone plan), checks every material against the strategy so no decision, number, owner, date, or caveat is dropped, changed, or invented, and records assumptions in place of questions. It does not revise the strategy, create tasks, write files, or access ambient files, attachments, history, or network. The reply begins with an Operating implications section and ends with a Fidelity ledger section. Returns the terminal result of one durable request.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "ambition": {
-            "description": "The outcome the strategy serves and by when. Tegy keeps the materials pointed at it.",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          "audience": {
-            "description": "The default audience for any material that does not state its own.",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 2000
-          },
-          "constraints": {
-            "description": "Boundaries the materials must respect: tone, length, confidentiality, what to leave out.",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 20000
-          },
-          "idempotency_key": {
-            "type": "string",
-            "minLength": 8,
-            "maxLength": 160,
-            "description": "Reuse only when retrying this exact Execute packet."
-          },
-          "materials": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 20000,
-            "description": "The materials to prepare, one per line with audience and purpose, at most 3 (for example: Board pre-read, one page, for the CFO). Each line becomes that material's heading."
-          },
-          "operating_context": {
-            "description": "Facts about the organization that will carry it out: who owns what, capacity, calendar, budget, decision rights, dependencies, constraints. Name the owners here; Tegy never invents them.",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 100000
-          },
-          "strategy": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 160000,
-            "description": "The complete finished strategy or analysis to carry out, verbatim. Tegy does not revise it."
-          }
-        },
-        "required": [
-          "idempotency_key",
-          "materials",
-          "strategy"
-        ],
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      },
-      "annotations": {
-        "readOnlyHint": false,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": false
-      },
-      "execution": {
-        "taskSupport": "forbidden"
-      },
-      "_meta": {
-        "anthropic/alwaysLoad": true,
-        "ui": {
-          "resourceUri": "ui://tegy/result-v2.html"
-        }
       }
     },
     {
       "name": "read_result",
-      "title": "Read Tegy result",
-      "description": "Read or recover an accepted request for the live result card. Never creates a second request.",
+      "title": "Read review result",
+      "description": "Read the result of a review already accepted by this Tegy connection. Pass its returned job_id. Waits briefly and returns the completed review, a terminal error, or a pending status. If pending, call read_result again with the same job_id; pending is not a completed review. May recover the same accepted request, but never starts or charges for a second review.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -276,53 +70,6 @@
         },
         "required": [
           "job_id"
-        ],
-        "$schema": "http://json-schema.org/draft-07/schema#"
-      },
-      "annotations": {
-        "readOnlyHint": false,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": false
-      },
-      "execution": {
-        "taskSupport": "forbidden"
-      },
-      "_meta": {
-        "ui": {
-          "visibility": [
-            "app"
-          ]
-        }
-      }
-    },
-    {
-      "name": "receive_result",
-      "title": "Receive Tegy result",
-      "description": "Used by Tegy plugin hooks to receive or recover accepted work. Never creates a new request or charges for another session.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "event": {
-            "type": "string",
-            "enum": [
-              "PostToolUse",
-              "Stop"
-            ]
-          },
-          "session_id": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 160
-          },
-          "receipt": {
-            "type": "string",
-            "maxLength": 256000
-          }
-        },
-        "required": [
-          "event",
-          "session_id"
         ],
         "$schema": "http://json-schema.org/draft-07/schema#"
       },
