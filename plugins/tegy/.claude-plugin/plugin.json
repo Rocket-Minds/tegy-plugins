@@ -1,7 +1,7 @@
 {
   "name": "tegy",
-  "description": "Interactive strategy solving, independent decision review, and executive brief writing.",
-  "version": "6.0.1",
+  "description": "Independent review of a supplied business decision, with text results and recovery of an accepted review.",
+  "version": "7.0.0",
   "author": {
     "name": "MGMJ Innovation Group LLC (Tegy)"
   },
@@ -9,9 +9,8 @@
   "repository": "https://github.com/Rocket-Minds/tegy-plugins",
   "license": "MIT",
   "keywords": [
-    "strategy",
-    "executive-writing",
-    "adversarial-review",
+    "strategy-review",
+    "decision-review",
     "tegy"
   ],
   "icon": "assets/icon.svg",

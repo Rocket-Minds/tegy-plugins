@@ -1,7 +1,7 @@
 ---
-tags: [submission]
-max_turns: 8
-timeout_seconds: 120
+tags: ["submission"]
+max_turns: 12
+timeout_seconds: 180
 allowed_tools: [Skill, Agent]
 ---
 

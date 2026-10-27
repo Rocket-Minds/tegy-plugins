@@ -5,36 +5,34 @@
     "email": "admin@tegy.io"
   },
   "metadata": {
-    "description": "Solve decisions, review recommendations, and brief executives with Tegy"
+    "description": "Independent decision review with Tegy"
   },
   "plugins": [
     {
       "name": "tegy",
       "displayName": "Tegy for Claude Code",
-      "description": "Three concise Claude commands for strategy solving, decision review, and executive writing.",
-      "version": "6.0.1",
+      "description": "Independent review of a supplied business decision, with text results and accepted-job recovery.",
+      "version": "7.0.0",
       "source": "./plugins/tegy",
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
       "tags": [
-        "strategy",
         "strategy-review",
-        "executive-writing"
+        "decision-review"
       ]
     },
     {
       "name": "tegy-cowork",
       "displayName": "Tegy for Cowork",
-      "description": "User-requested strategy solving, decision review, and executive briefs in Cowork, with live result cards.",
-      "version": "7.0.1",
+      "description": "Independent review of a supplied business decision, with text results and accepted-job recovery.",
+      "version": "8.0.0",
       "source": "./plugins/tegy-desktop",
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
       "tags": [
-        "cowork",
-        "strategy",
         "strategy-review",
-        "executive-writing"
+        "decision-review",
+        "cowork"
       ]
     }
   ]

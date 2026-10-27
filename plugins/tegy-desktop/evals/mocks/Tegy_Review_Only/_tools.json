@@ -1,0 +1,87 @@
+{
+  "tools": [
+    {
+      "name": "review",
+      "title": "Review strategy",
+      "description": "Use this when the user requests an independent review of an existing business strategy or decision plan and supplies its original brief and complete draft. Do not use for standalone arithmetic questions, general questions, routine writing or editing, reminders, or creating a strategy. Ask for missing review inputs before calling; never invent a draft or substitute the question for it. Selecting or mentioning Tegy alone does not request a review. Tegy does not rewrite the draft or access ambient files or conversation context. Starts or reattaches to one durable review. If the result is pending, call read_result with its job_id until the review completes; do not start another review to retrieve its result.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "criteria": {
+            "description": "Optional explicit review criteria; this is review material, not an instruction to expand scope.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "evidence": {
+            "description": "Optional bounded evidence packet to use when reviewing the draft.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 160,
+            "description": "Reuse only when retrying this exact review packet; Tegy will reattach instead of starting duplicate paid work."
+          },
+          "original_brief": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40000,
+            "description": "The exact original request the draft must answer."
+          },
+          "strategy_draft": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160000,
+            "description": "The complete immutable draft to review."
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "original_brief",
+          "strategy_draft"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "read_result",
+      "title": "Read review result",
+      "description": "Read the result of a review already accepted by this Tegy connection. Pass its returned job_id. Waits briefly and returns the completed review, a terminal error, or a pending status. If pending, call read_result again with the same job_id; pending is not a completed review. May recover the same accepted request, but never starts or charges for a second review.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}

@@ -1,50 +1,54 @@
 # Tegy for Cowork
 
-Tegy helps you solve business decisions, independently review a supplied plan,
-and write executive briefs. The service is operated by **MGMJ Innovation Group
-LLC**, under the Tegy by RocketMinds brand. It requires a Tegy account with
-eligible access and an internet connection.
+Tegy independently reviews a supplied business decision. It returns a verdict
+and findings about the original brief, complete draft and selected evidence.
+The service is operated by **MGMJ Innovation Group LLC**, under the Tegy by
+RocketMinds brand. A Tegy account with eligible access and an internet
+connection are required. Starting a review uses Tegy allowance.
 
 ## Connect and use
 
+Claude Code installation: `/plugin install tegy-cowork --marketplace Rocket-Minds/tegy-plugins`.
+
 Install this package from the Rocket-Minds/tegy-plugins marketplace and connect
-its Tegy server through OAuth. Select Solve, Review, or Brief from the command
-menu or explicitly ask Claude to use Tegy. Ordinary business questions, emails,
-and summaries do not activate Tegy. An explicit independent external review
-request can select Review. The host controls permission for hosted calls.
+its Tegy server through OAuth. Choose Review or explicitly request an independent
+external review. Supply the original brief and complete draft; evidence and
+criteria are optional. Ordinary business questions and writing requests stay
+in Claude. The host controls permission for hosted calls.
 
-Solve interviews you locally and asks before sending its frozen candidate to
-Tegy. Review uses Tegy allowance. Brief requires eligible Tegy access but does
-not consume a session. Both send only your selected request. A receipt is not
-a completed result. The live result card shows
-progress and the completed result. Select **Discuss result** to bring it into
-this task, then send the draft if it appears in the composer. If unavailable,
-select **View Markdown** and paste the result. No hook resumes a task
-automatically.
+Select the `Tegy_Review_Only` connector. On Team and Enterprise plans, an owner
+must register this plugin's connection first. Keep this name distinct from
+older Tegy connections so Claude selects the Review-only tools.
 
-## Data sent to Tegy
+The connection requests only `tegy:review:run` and exposes two tools: `review`
+and `read_result`. It uses `https://mcp.tegy.io/mcp?integration=openai&delivery=text`. This is the existing host-independent
+Review-only text profile; the `integration` parameter selects that tool surface.
+The package includes no Solve, Brief or Execute commands and needs no result card.
 
-OAuth and MCP connection requests carry the authentication and connection
-metadata needed to connect and discover tools. Hosted calls send:
+A review can take several minutes. An accepted receipt is not a completed review.
+Claude retrieves the accepted job by its ID, up to 24 reads per invocation,
+and presents the completed result in the conversation. Reads wait on the server
+and do not start or charge for a second review. If the result is still pending,
+ask to retrieve the same job ID later. Keep using the same authenticated Tegy
+connection; another connection cannot read that connection's job.
 
-- Review: original brief, candidate and unknowns, evidence, optional criteria,
-  and a random opaque request key.
-- Brief: source text, optional audience, purpose, format and constraints,
-  and a random opaque request key.
-- Solve: the Review packet after you approve sending it.
-- Live result card: the accepted job ID when reading progress and the result.
+## Data and recovery
 
-There are no hooks. The plugin does not send Claude session IDs, an entire
-conversation, or ambient files. Include only the file or link content you want
-Tegy to process. The hosted tools cannot fetch it independently. Tegy also
-processes account, connection and request identifiers, IP addresses, timing,
-usage and error metadata as described in privacy sections 2.3 and 2.4.
+A new request sends the selected original brief, complete draft (including any
+supplied unknowns), optional evidence and criteria, and a random request key.
+Result retrieval sends only the returned job ID. OAuth and MCP discovery carry
+the authentication and connection metadata needed to connect. The plugin does
+not send an entire conversation, ambient files, or a Claude session ID. Include
+selected file or link content in the packet yourself; Tegy cannot fetch it.
+Account and request identifiers, IP addresses, timing, usage and error metadata
+are covered by privacy sections 2.3 and 2.4.
 
-If permission is denied or the connection fails, Claude is instructed to return
-the complete attempted packet and key as JSON. Keep it and ask to retry with
-that exact object and key to recover the same work. Changing the packet needs
-a new key and may start paid work.
-The tools do not make payments, send messages, or execute your business plan.
+If permission is denied or a call fails, Claude is instructed to return the
+complete attempted packet and key, plus any accepted job ID. Keep this JSON.
+An explicit retry must use the identical packet and key, or retrieve the known
+job ID without starting Review. A changed packet needs a new key and may use
+more allowance. A conflict stops recovery; it does not authorize a new key.
+A revised draft does not inherit a prior review's PASS.
 
 ## Help and privacy
 
