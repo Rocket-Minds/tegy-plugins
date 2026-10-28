@@ -1,5 +1,5 @@
 ---
 type: regex
-pattern: "Gate:\\s*PASS"
+pattern: "\\bGate\\b\\s*:?[\\s*_`]*PASS\\b"
 flags: i
 ---
