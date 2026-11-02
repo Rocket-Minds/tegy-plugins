@@ -3,7 +3,7 @@
     {
       "name": "review",
       "title": "Review strategy",
-      "description": "Use this when the user requests an independent review of an existing business strategy or decision plan and supplies its original brief and complete draft. Do not use for standalone arithmetic questions, general questions, routine writing or editing, reminders, or creating a strategy. Ask for missing review inputs before calling; never invent a draft or substitute the question for it. Selecting or mentioning Tegy alone does not request a review. Tegy does not rewrite the draft or access ambient files or conversation context. Adds or reattaches to one durable review using allowance already included in the connected Tegy account. It does not purchase credits, change a subscription, or initiate payment. If the result is pending, call read_result with its job_id until the review completes; do not start another review to retrieve its result.",
+      "description": "Independently reviews an existing business strategy or decision plan supplied with its original brief and complete immutable draft. Intended for an explicit request for independent review; selecting or mentioning Tegy alone is not a review request. Scope excludes standalone arithmetic, general questions, routine writing or editing, reminders, and strategy creation. Tegy does not rewrite the draft or access ambient files or conversation context. Creates or reattaches to one durable review using allowance already included in the connected Tegy account, without purchasing credits, changing a subscription, or initiating payment. Returns the completed review or a pending status with the accepted job_id.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -23,7 +23,7 @@
             "type": "string",
             "minLength": 8,
             "maxLength": 160,
-            "description": "Reuse only when retrying this exact review packet; Tegy reattaches to the same review instead of creating a duplicate or consuming the account allowance twice."
+            "description": "Identifies one exact immutable review packet; matching input and key reattach to the same review without creating a duplicate or consuming the account allowance twice."
           },
           "original_brief": {
             "type": "string",
@@ -58,7 +58,7 @@
     {
       "name": "brief",
       "title": "Write an executive summary",
-      "description": "Use this when the user asks to turn supplied business text or notes into concise executive or customer communication, such as a board memo, project update, or customer email. Do not use for general-knowledge questions or ordinary conversation that the host can answer directly, even when Tegy is selected. Do not manufacture source text from the host answer just to call this tool. Preserve material facts and uncertainty; remove repetition and jargon. Uses only the supplied text; any inferred risk or assumption is tagged with a confidence level. Returns the finished communication directly. If interrupted, retry the exact input with the same idempotency_key to recover the existing operation. Never create a new key merely to check its result.",
+      "description": "Turns supplied business text or notes into concise executive or customer communication, such as a board memo, project update, or customer email. Intended for an explicit transformation request with complete source text supplied for that operation; selecting or mentioning Tegy alone is not a summary request. Scope excludes general-knowledge questions and ordinary conversation. Preserves material facts and uncertainty while removing repetition and jargon. Uses only the supplied text; inferred risks or assumptions are tagged with a confidence level. Returns finished communication directly. Repeating the same complete input and idempotency_key retrieves the existing operation after an interruption.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -86,7 +86,7 @@
             "type": "string",
             "minLength": 8,
             "maxLength": 160,
-            "description": "Reuse only when retrying this exact executive summary request."
+            "description": "Identifies one exact immutable executive summary request; matching input and key retrieve the existing operation."
           },
           "purpose": {
             "type": "string",
@@ -119,7 +119,7 @@
     {
       "name": "solve",
       "title": "Solve strategic problem",
-      "description": "Use this when the user asks Tegy to analyze a supplied business strategy problem or decision and recommend a solution. Do not use for standalone arithmetic, general-knowledge questions, routine writing, or reviewing an existing draft. Selecting or mentioning Tegy alone does not request a solution. Ask for the strategic problem if it is missing; never manufacture one from an ordinary question. Tegy proceeds from the supplied packet without follow-up questions, labels material assumptions, independently challenges and critiques the answer, and returns a five-section report (Context; TL;DR, ending in Next Steps; Fact Base; Risks; Key Assumptions). No ambient files, attachments, history, or network access. Uses allowance already included in the connected Tegy account; it does not purchase credits, change a subscription, or initiate payment. If pending, call read_result with the returned job_id until the solution completes; never start another request to retrieve its result.",
+      "description": "Analyzes one supplied business strategy problem or decision and recommends a solution. Intended for an explicit strategy-analysis request with a supplied problem; selecting or mentioning Tegy alone is not a solution request. Scope excludes standalone arithmetic, general-knowledge questions, routine writing, and review of an existing draft. Tegy proceeds from the supplied packet without follow-up questions, labels material assumptions, independently challenges and critiques the answer, and returns a five-section report (Context; TL;DR, ending in Next Steps; Fact Base; Risks; Key Assumptions). No ambient files, attachments, history, or network access. Uses allowance already included in the connected Tegy account, without purchasing credits, changing a subscription, or initiating payment. Returns the completed solution or a pending status with the accepted job_id.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -139,7 +139,7 @@
             "type": "string",
             "minLength": 8,
             "maxLength": 160,
-            "description": "Reuse only when retrying this exact Solve packet."
+            "description": "Identifies one exact immutable Solve packet; matching input and key reattach to the same operation."
           },
           "problem": {
             "type": "string",
@@ -173,7 +173,7 @@
     {
       "name": "read_result",
       "title": "Read Tegy result",
-      "description": "Read the result of a Review or Solve request already accepted by this Tegy connection. Pass its returned job_id. Waits briefly and returns the completed result, a terminal error, or a pending status. If pending, call read_result again with the same job_id; pending is not a completed result. After an interruption it may finish dispatching or resume the same accepted job, creating or updating its persisted execution state. It never starts or charges for a second request, purchases credits, or initiates payment. Executive Summary returns text directly; recover an interrupted summary by retrying brief with the exact input and idempotency_key.",
+      "description": "Retrieves the result of a Review or Solve request already accepted by this Tegy connection, identified by its returned job_id. Waits briefly and returns the completed result, a terminal error, or a pending status. Repeated calls with the same job_id retrieve the same accepted job. After an interruption it may finish dispatching or resume that job, creating or updating its persisted execution state. It never starts or charges for a second request, purchases credits, or initiates payment.",
       "inputSchema": {
         "type": "object",
         "properties": {
