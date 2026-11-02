@@ -1,3 +1,4 @@
 .DS_Store
 plugins/tegy/evals/results/
 plugins/tegy-desktop/evals/results/
+.codex/

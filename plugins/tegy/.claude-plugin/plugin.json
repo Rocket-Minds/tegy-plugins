@@ -1,7 +1,7 @@
 {
   "name": "tegy",
-  "description": "Independent review of a supplied business decision, with text results and recovery of an accepted review.",
-  "version": "7.0.0",
+  "description": "Solve supplied business decisions, independently review strategy drafts, and write executive summaries, with text results and exact-request recovery.",
+  "version": "8.0.0",
   "author": {
     "name": "MGMJ Innovation Group LLC (Tegy)"
   },

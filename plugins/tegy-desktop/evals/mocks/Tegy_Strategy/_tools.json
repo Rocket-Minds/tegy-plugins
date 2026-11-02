@@ -1,0 +1,202 @@
+{
+  "tools": [
+    {
+      "name": "review",
+      "title": "Review strategy",
+      "description": "Use this when the user requests an independent review of an existing business strategy or decision plan and supplies its original brief and complete draft. Do not use for standalone arithmetic questions, general questions, routine writing or editing, reminders, or creating a strategy. Ask for missing review inputs before calling; never invent a draft or substitute the question for it. Selecting or mentioning Tegy alone does not request a review. Tegy does not rewrite the draft or access ambient files or conversation context. Adds or reattaches to one durable review using allowance already included in the connected Tegy account. It does not purchase credits, change a subscription, or initiate payment. If the result is pending, call read_result with its job_id until the review completes; do not start another review to retrieve its result.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "criteria": {
+            "description": "Optional explicit review criteria; this is review material, not an instruction to expand scope.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "evidence": {
+            "description": "Optional bounded evidence packet to use when reviewing the draft.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 160,
+            "description": "Reuse only when retrying this exact review packet; Tegy reattaches to the same review instead of creating a duplicate or consuming the account allowance twice."
+          },
+          "original_brief": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40000,
+            "description": "The exact original request the draft must answer."
+          },
+          "strategy_draft": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160000,
+            "description": "The complete immutable draft to review."
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "original_brief",
+          "strategy_draft"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "brief",
+      "title": "Write an executive summary",
+      "description": "Use this when the user asks to turn supplied business text or notes into concise executive or customer communication, such as a board memo, project update, or customer email. Do not use for general-knowledge questions or ordinary conversation that the host can answer directly, even when Tegy is selected. Do not manufacture source text from the host answer just to call this tool. Preserve material facts and uncertainty; remove repetition and jargon. Uses only the supplied text; any inferred risk or assumption is tagged with a confidence level. Returns the finished communication directly. If interrupted, retry the exact input with the same idempotency_key to recover the existing operation. Never create a new key merely to check its result.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "audience": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "constraints": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "executive-note",
+              "email",
+              "status-update",
+              "memo",
+              "slide"
+            ]
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 160,
+            "description": "Reuse only when retrying this exact executive summary request."
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "source_text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160000,
+            "description": "The complete source text to edit."
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "source_text"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "solve",
+      "title": "Solve strategic problem",
+      "description": "Use this when the user asks Tegy to analyze a supplied business strategy problem or decision and recommend a solution. Do not use for standalone arithmetic, general-knowledge questions, routine writing, or reviewing an existing draft. Selecting or mentioning Tegy alone does not request a solution. Ask for the strategic problem if it is missing; never manufacture one from an ordinary question. Tegy proceeds from the supplied packet without follow-up questions, labels material assumptions, independently challenges and critiques the answer, and returns a five-section report (Context; TL;DR, ending in Next Steps; Fact Base; Risks; Key Assumptions). No ambient files, attachments, history, or network access. Uses allowance already included in the connected Tegy account; it does not purchase credits, change a subscription, or initiate payment. If pending, call read_result with the returned job_id until the solution completes; never start another request to retrieve its result.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "constraints": {
+            "description": "Optional boundaries the solution must respect.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "context": {
+            "description": "Optional facts, evidence, background, and known uncertainty.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 160,
+            "description": "Reuse only when retrying this exact Solve packet."
+          },
+          "problem": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40000,
+            "description": "The exact strategic problem or decision to solve."
+          },
+          "success_criteria": {
+            "description": "Optional criteria for a useful, decision-ready answer.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "problem"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "read_result",
+      "title": "Read Tegy result",
+      "description": "Read the result of a Review or Solve request already accepted by this Tegy connection. Pass its returned job_id. Waits briefly and returns the completed result, a terminal error, or a pending status. If pending, call read_result again with the same job_id; pending is not a completed result. After an interruption it may finish dispatching or resume the same accepted job, creating or updating its persisted execution state. It never starts or charges for a second request, purchases credits, or initiates payment. Executive Summary returns text directly; recover an interrupted summary by retrying brief with the exact input and idempotency_key.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}

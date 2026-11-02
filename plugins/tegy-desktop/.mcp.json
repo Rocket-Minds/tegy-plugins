@@ -1,10 +1,10 @@
 {
   "mcpServers": {
-    "Tegy_Review_Only": {
+    "Tegy_Strategy": {
       "type": "http",
       "url": "https://mcp.tegy.io/mcp?integration=openai&delivery=text",
       "oauth": {
-        "scopes": "tegy:review:run"
+        "scopes": "tegy:review:run tegy:brief:run tegy:solve:run"
       }
     }
   }

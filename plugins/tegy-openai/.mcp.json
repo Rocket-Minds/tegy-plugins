@@ -1,11 +1,28 @@
 {
   "mcpServers": {
     "tegy-mcp": {
-      "type": "http",
-      "url": "https://mcp.tegy.io/mcp",
-      "oauth_resource": "https://mcp.tegy.io/mcp",
-      "scopes": ["tegy:review:run"],
-      "tool_timeout_sec": 2100
+      "type": "streamable-http",
+      "url": "https://mcp.tegy.io/mcp?integration=openai&delivery=text",
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "oauth",
+            "client": {
+              "mode": "dcr"
+            },
+            "baseScopes": [
+              "tegy:review:run",
+              "tegy:brief:run",
+              "tegy:solve:run"
+            ],
+            "defaultScopes": [
+              "tegy:review:run",
+              "tegy:brief:run",
+              "tegy:solve:run"
+            ]
+          }
+        }
+      }
     }
   }
 }
