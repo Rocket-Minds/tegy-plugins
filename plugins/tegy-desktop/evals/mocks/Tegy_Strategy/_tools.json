@@ -1,0 +1,202 @@
+{
+  "tools": [
+    {
+      "name": "review",
+      "title": "Review strategy",
+      "description": "Independently reviews an existing business strategy or decision plan supplied with its original brief and complete immutable draft. Intended for an explicit request for independent review; selecting or mentioning Tegy alone is not a review request. Scope excludes standalone arithmetic, general questions, routine writing or editing, reminders, and strategy creation. Tegy does not rewrite the draft or access ambient files or conversation context. Creates or reattaches to one durable review using allowance already included in the connected Tegy account, without purchasing credits, changing a subscription, or initiating payment. Returns the completed review or a pending status with the accepted job_id.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "criteria": {
+            "description": "Optional explicit review criteria; this is review material, not an instruction to expand scope.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "evidence": {
+            "description": "Optional bounded evidence packet to use when reviewing the draft.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 160,
+            "description": "Identifies one exact immutable review packet; matching input and key reattach to the same review without creating a duplicate or consuming the account allowance twice."
+          },
+          "original_brief": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40000,
+            "description": "The exact original request the draft must answer."
+          },
+          "strategy_draft": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160000,
+            "description": "The complete immutable draft to review."
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "original_brief",
+          "strategy_draft"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "brief",
+      "title": "Write an executive summary",
+      "description": "Turns supplied business text or notes into concise executive or customer communication, such as a board memo, project update, or customer email. Intended for an explicit transformation request with complete source text supplied for that operation; selecting or mentioning Tegy alone is not a summary request. Scope excludes general-knowledge questions and ordinary conversation. Preserves material facts and uncertainty while removing repetition and jargon. Uses only the supplied text; inferred risks or assumptions are tagged with a confidence level. Returns finished communication directly. Repeating the same complete input and idempotency_key retrieves the existing operation after an interruption.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "audience": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "constraints": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "executive-note",
+              "email",
+              "status-update",
+              "memo",
+              "slide"
+            ]
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 160,
+            "description": "Identifies one exact immutable executive summary request; matching input and key retrieve the existing operation."
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "source_text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160000,
+            "description": "The complete source text to edit."
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "source_text"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "solve",
+      "title": "Solve strategic problem",
+      "description": "Analyzes one supplied business strategy problem or decision and recommends a solution. Intended for an explicit strategy-analysis request with a supplied problem; selecting or mentioning Tegy alone is not a solution request. Scope excludes standalone arithmetic, general-knowledge questions, routine writing, and review of an existing draft. Tegy proceeds from the supplied packet without follow-up questions, labels material assumptions, independently challenges and critiques the answer, and returns a five-section report (Context; TL;DR, ending in Next Steps; Fact Base; Risks; Key Assumptions). No ambient files, attachments, history, or network access. Uses allowance already included in the connected Tegy account, without purchasing credits, changing a subscription, or initiating payment. Returns the completed solution or a pending status with the accepted job_id. Request fields contain the user-selected wording and only the optional material supplied for that field. Client-added analysis, interpretations, and constraints are outside the request packet. A pending response contains no completed Tegy solution; read_result retrieves the same accepted job, including after a pause in waiting.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "constraints": {
+            "description": "Optional user-supplied boundaries in their original wording. Client-added assumptions, interpretations, or requirements are outside this field.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "context": {
+            "description": "Optional user-selected facts, evidence, background, and known uncertainty in their original wording. Client-added analysis or interpretations are outside this field.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100000
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 160,
+            "description": "Identifies one exact immutable Solve packet; matching input and key reattach to the same operation."
+          },
+          "problem": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40000,
+            "description": "The user-selected strategic problem or decision in its original wording. Client-added qualifications are outside this field."
+          },
+          "success_criteria": {
+            "description": "Optional user-supplied success criteria in their original wording. Client-added requirements are outside this field.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "idempotency_key",
+          "problem"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "read_result",
+      "title": "Read Tegy result",
+      "description": "Retrieves the result of a Review or Solve request already accepted by this Tegy connection, identified by its returned job_id. Waits briefly and returns the completed result, a terminal error, or a pending status. A pending response reports ongoing work, contains no completed Tegy answer, and leaves the same job available for later retrieval. Repeated calls with the same job_id recover that accepted job, including after the host pauses waiting. After an interruption it may finish dispatching or resume that job, creating or updating its persisted execution state. It never starts or charges for a second request, purchases credits, or initiates payment.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}

@@ -1,13 +1,18 @@
 # Tegy plugins
 
-Tegy independently reviews a supplied business decision. The Claude packages
-provide one Review command and return text results in the conversation. They
-request only Review permission. Solve, Brief, Execute and result cards are not
-part of these packages.
+Tegy provides three operations on material you explicitly supply:
+
+| Operation | Input | Result |
+| --- | --- | --- |
+| Review | Original brief and complete draft; optional evidence and criteria | Independent verdict and findings |
+| Solve | Business problem; optional context, constraints and success criteria | Recommendation, fact base, risks, assumptions and next steps |
+| Executive Summary (`brief`) | Source text; optional audience, purpose, format and constraints | Finished communication |
 
 The service is operated by **MGMJ Innovation Group LLC**, under the Tegy by
-RocketMinds brand. A Tegy account with eligible access is required. Starting a
-review uses Tegy allowance. The host controls approval for hosted tool calls.
+RocketMinds brand. A Tegy account with eligible access is required. Review and
+Solve use the account's applicable allowance. Executive Summary does not consume
+a customer session allowance. The host controls permission for each hosted call.
+The packages do not execute plans, run local code, install hooks, or use result cards.
 
 ## Claude Code
 
@@ -17,74 +22,85 @@ review uses Tegy allowance. The host controls approval for hosted tool calls.
 /reload-plugins
 ```
 
-Open `/mcp`, select the plugin-provided Tegy server and complete OAuth. Use
-`/tegy:review` or explicitly request an independent external review. Supply the
-original brief and complete draft, plus any evidence and criteria you select.
-An ordinary business question or writing request stays in Claude.
+Open `/mcp`, select the plugin's `tegy` server and authenticate. Use
+`/tegy:review`, `/tegy:solve`, or `/tegy:brief`, or explicitly ask Tegy for that
+operation with its required material. Ordinary questions and writing requests
+stay in Claude. The [app connection guide](https://app.tegy.io/mcp) points
+Claude terminal and Claude Code in the desktop app to this package.
 
-The server exposes only `review` and `read_result`. The completed assessment
-returns through the normal tool response. Select the plugin-provided server
-if you also have a manually configured Tegy connection.
-
-## Claude Cowork
+## Cowork
 
 1. Open **Customize > Plugins > Add > Add marketplace**.
 2. Add `https://github.com/Rocket-Minds/tegy-plugins` and install **Tegy for Cowork**.
-3. Open its **Connectors** tab, select **Connect** and complete Tegy OAuth.
-4. Start a new task and choose Review, or explicitly request an independent
-   external review of the supplied brief and draft.
+3. Connect its `Tegy_Strategy` connector through OAuth.
+4. Start a new task and choose Review, Solve, or Brief (Executive Summary).
 
-For Team and Enterprise, an Owner or Primary Owner must first register the
-plugin's Review-only endpoint:
-`https://mcp.tegy.io/mcp?integration=openai&delivery=text`.
-Keep the supplied connector name `Tegy_Review_Only` so it stays distinct from older Tegy connections.
-The profile is host independent; `integration=openai` selects the existing
-Review-only text surface. Both Claude packages use this same endpoint.
+On Team and Enterprise, an Owner or Primary Owner may need to register the
+plugin's connector first. Use its supplied name to distinguish it from older
+Tegy connections. Update through **Add > Manage marketplaces > tegy-plugins >
+Check for updates** and disable overlapping uploaded copies.
 
-Update through **Add > Manage marketplaces > tegy-plugins > Check for updates**.
-Disable older uploaded copies to avoid overlapping commands. No automatic
-hook or Receive Tegy result permission is required.
+## Codex
+
+```text
+codex plugin marketplace add Rocket-Minds/tegy-plugins
+codex plugin add tegy-openai@tegy
+```
+
+Use `$tegy-review`, `$tegy-solve`, or `$tegy-brief`, or explicitly ask Tegy for
+that operation in ordinary language. Requests that do not ask for Tegy stay
+in Codex. The bundled `tegy-mcp` connection provides the same three operations;
+it does not depend on the older registered Review app.
+
+## Permissions and upgrades
+
+All packages connect to
+`https://mcp.tegy.io/mcp?integration=openai&delivery=text`. This text profile
+is host independent. It exposes `review`, `solve`, `brief`, and `read_result`
+according to consent and excludes Execute. The requested permissions are exactly
+`tegy:review:run`, `tegy:brief:run`, and `tegy:solve:run`.
+
+Updating a package does not expand an existing Review-only grant. Reauthenticate
+the plugin's connection and confirm all three permissions on Tegy's consent
+screen. In Claude Code, use `/mcp` or `claude mcp login plugin:tegy:tegy`.
+Cowork now uses `Tegy_Strategy`, separate from the old `Tegy_Review_Only`
+connection. Keep old accepted jobs on their original connection for recovery;
+reconnecting as a new grant does not transfer those jobs.
+
+A direct Claude or ChatGPT connector does not install these skills. GitHub
+marketplace installation is separate from Anthropic directory approval and
+OpenAI's directory package; no publication or acceptance is implied here.
 
 ## Results and recovery
 
-A review can take several minutes. The tool returns either a completed review
-or an accepted receipt with a job ID. For a receipt, Claude uses `read_result`
-with that ID until completion, up to 24 reads per invocation. A read waits on
-the server and does not start or charge for a second review. There is no card
-or manual result handoff. A receipt must never be reported as a passed review.
+Review and Solve can take several minutes. The host retrieves the same accepted
+job and presents Tegy's completed answer faithfully. If work is still running
+when waiting pauses, it explains the status briefly; ask to continue the same
+Tegy request later. A pending receipt is not failure or a completed answer.
+Retrieval does not start or charge for another operation. The host keeps the
+accepted job ID for recovery; it does not replace Tegy's result with its own.
 
-If the result remains pending, ask to retrieve the same ID later. For explicit
-recovery by job ID, Claude skips Review entirely. Recovery must use the same
-Tegy connection; jobs are isolated to their authorized connection.
+Executive Summary returns its finished text directly, without `read_result`.
+After an interruption, an explicit retry uses the complete retained packet and
+identical key to recover that operation.
 
-A failed or denied call returns the complete attempted packet and random key,
-plus any accepted job ID. Keep it. If no job ID is known, ask to retry with the
-identical packet and key. Do not reconstruct it from a summary. An idempotency
-conflict stops the retry; a changed packet requires a new request and may use
-more allowance. A revised draft does not inherit a previous review's PASS.
+If permission is denied or a request cannot complete, the host explains what
+happened and the next step without automatically resubmitting. It retains the
+exact packet, key and any accepted job ID for recovery; a full technical payload
+is available when requested rather than displayed by default. A conflict stops
+an automatic retry. Changed input is new work, not recovery. Editing a draft
+does not carry forward an earlier Review assessment. Solve and Executive Summary
+do not imply Review approval or execution of a plan.
 
 ## What is sent
 
-OAuth and MCP discovery send the connection information needed to authenticate
-and discover tools. Review sends only the selected original brief, complete
-draft and supplied unknowns, optional evidence and criteria, and a random
-request key. Reading the result sends only the accepted job ID.
-
-The plugin does not send an entire conversation, ambient files, or a Claude
-session ID. Selected file or link content must be included in the packet;
-Tegy cannot retrieve it independently. Account, connection and request
-identifiers, IP addresses, timing, usage and error metadata are described in
-[privacy sections 2.3 and 2.4](https://tegy.io/privacy).
-
-## Other clients
-
-The existing Codex package provides the explicit `$tegy-review` command. Add
-this marketplace with `codex plugin marketplace add Rocket-Minds/tegy-plugins`,
-then install `tegy-openai@tegy`. It requests only Review permission. Its package
-is maintained separately from the Claude packages in this change.
-
-A direct Claude or ChatGPT connector does not install these skills. See the
-[connection guide](https://app.tegy.io/mcp) for supported setup paths.
+Each operation sends only its selected input fields and a random request key.
+Result retrieval sends only the accepted job ID. The plugins do not send the
+whole conversation, ambient files, or a host session ID. Include selected file
+or link content in the packet yourself; Tegy cannot retrieve it independently.
+OAuth and discovery exchange the metadata needed to authenticate and find tools.
+Account, connection and request identifiers, IP addresses, timing, usage and
+error metadata are described in [privacy sections 2.3 and 2.4](https://tegy.io/privacy).
 
 ## Validation
 
@@ -99,30 +115,21 @@ claude plugin eval ./plugins/tegy-desktop --tag submission --ablation none --tru
 ```
 
 The [native plugin evals](https://code.claude.com/docs/en/plugin-evals) use
-synthetic MCP responses with the two-tool Review-only catalog. They check
-ordinary requests, missing inputs, removed commands, exact packet replay,
-pending-result retrieval, recovery by ID, conflicts, denied calls, and verdict
-handling. Mocked tools are permitted automatically by the eval harness. A pass
-proves these instruction behaviors; OAuth, real host permissions and live
-result delivery require separate checks. The Cowork package is evaluated in
-Claude Code's harness, not the Cowork host. Inspect reports and retained traces.
+synthetic MCP responses and the three-operation text catalog. They check
+activation, missing inputs, exact packets, pending results, recovery, denial,
+conflicts, verdict handling and untrusted result instructions. Mocked tools
+are automatically permitted by the harness. Cowork's package runs in Claude
+Code's harness; this does not verify the Cowork host or real OAuth permissions.
 
-Before release, run `tests/decision-gate-eval-cases.json` in each real target
-host with synthetic material. Record first-time OAuth, permission approval or
-denial, completed results, identical-key replay and recovery by ID. Confirm
-that retrieval creates no additional paid job and cannot cross connections.
+Before release, run `tests/decision-gate-eval-cases.json` in each target host
+with synthetic material. Record fresh OAuth, approval and denial, each completed
+operation, exact-key replay, recovery and isolation between connections. Audit
+that denied calls create no work and recovery creates no duplicate paid job.
+Directory acceptance and installation require their own evidence.
 
-[Manufact publishing checks](https://docs.manufact.com/dashboard/publish-checks)
-can audit the live MCP server independently. Record the exact endpoint, tool
-catalog, policy-review completeness and run time. A checklist score is separate
-from native client delivery and directory acceptance.
+## License and help
 
-For account or installation help, visit [help.tegy.io](https://help.tegy.io).
-
-## License and scope
-
-The public plugin manifests, skills and documentation are available under the
-[MIT License](LICENSE). Tegy's separately hosted backend, private runtime and
-private knowledge sources are outside this distribution and remain subject to
-the [service terms](https://tegy.io/terms) and account allowances. Keep private
-strategy methods and detailed review criteria in the hosted service.
+The public manifests, skills and documentation use the [MIT License](LICENSE).
+Tegy's hosted backend, private methods and knowledge sources remain outside
+this distribution and subject to the [service terms](https://tegy.io/terms)
+and account allowances. See [help.tegy.io](https://help.tegy.io).

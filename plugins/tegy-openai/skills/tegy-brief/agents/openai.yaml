@@ -1,0 +1,15 @@
+interface:
+  display_name: "Tegy Executive Summary"
+  short_description: "Tegy Executive Summary for supplied business material"
+  default_prompt: "Use Tegy to summarize the business material I supply."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "tegy-mcp"
+      description: "Tegy's hosted Review, Solve and Executive Summary"
+      transport: "streamable_http"
+      url: "https://mcp.tegy.io/mcp?integration=openai&delivery=text"
+
+policy:
+  allow_implicit_invocation: true
