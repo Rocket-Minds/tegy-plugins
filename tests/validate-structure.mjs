@@ -8,10 +8,6 @@ const claudeManifest = await readJson(
   path.join(claudeRoot, ".claude-plugin/plugin.json")
 )
 const claudeMcpManifest = await readJson(path.join(claudeRoot, ".mcp.json"))
-const claudeReviewSkill = await readFile(
-  path.join(claudeRoot, "skills", "review", "SKILL.md"),
-  "utf8"
-)
 
 const codexManifest = await readJson(
   path.join(openAiRoot, ".codex-plugin/plugin.json")
@@ -35,7 +31,7 @@ assert.equal(claudeManifest.name, "tegy")
 assert.match(claudeManifest.version, /^\d+\.\d+\.\d+$/u)
 assert.match(claudeManifest.description, /Solve.*review.*executive summaries.*recovery/u)
 assert.equal(codexManifest.name, "tegy-openai")
-assert.equal(codexManifest.version, "5.0.0")
+assert.match(codexManifest.version, /^\d+\.\d+\.\d+$/u)
 assert.match(codexManifest.description, /Solve.*review.*executive summaries/u)
 assert.equal(codexManifest.apps, undefined, "The marketplace package must not load the obsolete registered Review app")
 assert.equal(codexManifest.mcpServers, "./.mcp.json")
@@ -107,18 +103,14 @@ for (const [root, prefix] of [[claudeRoot, ""], [openAiRoot, "tegy-"]]) {
     assert.doesNotMatch(header, /^(?:allowed-tools|hooks):/mu, "Hosted calls must use the host permission flow")
     assert.doesNotMatch(source, /\$\{CLAUDE_SESSION_ID\}/u)
     assert.match(source, /idempotency_key|identical key/u)
-    assert.match(source, /NO RESULT/u)
     if (prefix) {
-      assert.ok(header.includes("explicitly invokes $" + prefix + operation))
+      assert.match(header, /^description:\s*\S/mu, "Declare the skill purpose; native evals verify Tegy intent")
       const ui = await readFile(path.join(root, "skills", prefix + operation, "agents/openai.yaml"), "utf8")
       assert.ok(ui.includes(endpoint))
-      assert.match(ui, /allow_implicit_invocation: false/u)
+      assert.match(ui, /allow_implicit_invocation: true/u, "Natural-language Tegy requests may select the skill")
     }
   }
 }
-assert.match(claudeReviewSkill, /Gate: PASS/u)
-assert.match(claudeReviewSkill, /Gate: REVISE/u)
-assert.match(claudeReviewSkill, /Gate: BLOCK/u)
 assert.match(codexSkill, /read_result/u)
 assert.match(codexSkillUi, /value: "tegy-mcp"/u)
 

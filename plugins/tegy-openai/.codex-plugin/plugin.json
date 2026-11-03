@@ -1,6 +1,6 @@
 {
   "name": "tegy-openai",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Solve supplied business decisions, independently review strategy drafts, and write executive summaries, with text results and exact-request recovery.",
   "author": {
     "name": "Rocket Minds",

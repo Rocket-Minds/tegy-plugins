@@ -47,9 +47,10 @@ codex plugin marketplace add Rocket-Minds/tegy-plugins
 codex plugin add tegy-openai@tegy
 ```
 
-Use `$tegy-review`, `$tegy-solve`, or `$tegy-brief` explicitly. These skills do
-not invoke implicitly. The bundled `tegy-mcp` connection provides the same
-three operations; it does not depend on the older registered Review app.
+Use `$tegy-review`, `$tegy-solve`, or `$tegy-brief`, or explicitly ask Tegy for
+that operation in ordinary language. Requests that do not ask for Tegy stay
+in Codex. The bundled `tegy-mcp` connection provides the same three operations;
+it does not depend on the older registered Review app.
 
 ## Permissions and upgrades
 
@@ -72,21 +73,24 @@ OpenAI's directory package; no publication or acceptance is implied here.
 
 ## Results and recovery
 
-Review and Solve can take several minutes. An accepted receipt contains a job
-ID; `read_result` waits for that same job, up to 24 reads per invocation.
-Retrieval does not start or charge for another operation. A receipt is not a
-completed result. If still pending, request retrieval of the same ID later.
-Explicit ID-only recovery skips the original operation entirely.
+Review and Solve can take several minutes. The host retrieves the same accepted
+job and presents Tegy's completed answer faithfully. If work is still running
+when waiting pauses, it explains the status briefly; ask to continue the same
+Tegy request later. A pending receipt is not failure or a completed answer.
+Retrieval does not start or charge for another operation. The host keeps the
+accepted job ID for recovery; it does not replace Tegy's result with its own.
 
-Executive Summary returns its finished text directly and does not use
-`read_result`. Recover an interruption by explicitly retrying the complete
-retained packet and identical `idempotency_key`.
+Executive Summary returns its finished text directly, without `read_result`.
+After an interruption, an explicit retry uses the complete retained packet and
+identical key to recover that operation.
 
-For any denied or failed request, retain the complete attempted argument JSON,
-key and any accepted job ID. Do not reconstruct a packet from a summary or use
-a new key to bypass a conflict. Changes to the packet are new work, not recovery.
-A revised draft does not inherit a previous Review's PASS. Solve and Executive
-Summary do not imply Review approval or execution of a plan.
+If permission is denied or a request cannot complete, the host explains what
+happened and the next step without automatically resubmitting. It retains the
+exact packet, key and any accepted job ID for recovery; a full technical payload
+is available when requested rather than displayed by default. A conflict stops
+an automatic retry. Changed input is new work, not recovery. Editing a draft
+does not carry forward an earlier Review assessment. Solve and Executive Summary
+do not imply Review approval or execution of a plan.
 
 ## What is sent
 

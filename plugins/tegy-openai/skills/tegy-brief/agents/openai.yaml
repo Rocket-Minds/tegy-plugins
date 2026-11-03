@@ -1,7 +1,7 @@
 interface:
   display_name: "Tegy Executive Summary"
   short_description: "Tegy Executive Summary for supplied business material"
-  default_prompt: "Use $tegy-brief with the supplied packet."
+  default_prompt: "Use Tegy to summarize the business material I supply."
 
 dependencies:
   tools:
@@ -12,4 +12,4 @@ dependencies:
       url: "https://mcp.tegy.io/mcp?integration=openai&delivery=text"
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

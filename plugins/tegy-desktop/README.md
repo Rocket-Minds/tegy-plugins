@@ -14,12 +14,19 @@ and requests exactly `tegy:review:run`, `tegy:brief:run`, and `tegy:solve:run`.
 After upgrading from Review-only, reauthenticate and confirm the three
 permissions. Old jobs stay isolated to their original connection.
 
-Review and Solve return a completed result or an accepted job ID. Retrieve
-that ID through the same connection, up to 24 reads per invocation. A receipt
-is not completion. Executive Summary returns text directly; retry the exact
-packet and key to recover it. Keep the complete packet/key returned after a
-failure or denial. Do not replace a conflicting key or claim an edited draft
-inherits Review approval. The host controls tool permissions.
+Review and Solve return a completed answer or an accepted job. The host
+retrieves that same job and presents Tegy's finished result faithfully. If it
+is still running when waiting pauses, the host gives a brief status update;
+ask to continue the same request later. A pending receipt is not failure or a
+completed answer, and retrieval creates no second operation.
+
+Executive Summary returns text directly. An explicit retry after interruption
+uses the complete retained packet and identical key. After denial, failure or
+a conflict, the host explains the next step naturally and keeps the exact
+request for recovery, without a default full-JSON dump or an automatic new
+request. A changed draft does not retain its earlier Review assessment. The
+host controls tool permissions; it does not substitute its own answer for an
+unfinished Tegy result.
 
 Operated by **MGMJ Innovation Group LLC (Tegy)**. Eligible account access is
 required; Review and Solve use account allowance. Executive Summary does not
