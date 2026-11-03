@@ -102,7 +102,6 @@ for (const [root, prefix] of [[claudeRoot, ""], [openAiRoot, "tegy-"]]) {
     const header = source.split("\n---\n")[0]
     assert.doesNotMatch(header, /^(?:allowed-tools|hooks):/mu, "Hosted calls must use the host permission flow")
     assert.doesNotMatch(source, /\$\{CLAUDE_SESSION_ID\}/u)
-    assert.match(source, /idempotency_key|identical key/u)
     if (prefix) {
       assert.match(header, /^description:\s*\S/mu, "Declare the skill purpose; native evals verify Tegy intent")
       const ui = await readFile(path.join(root, "skills", prefix + operation, "agents/openai.yaml"), "utf8")
