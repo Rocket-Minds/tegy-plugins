@@ -13,7 +13,7 @@ Use `brief` from this plugin's `tegy-mcp` connection with normal host permission
 
 Brief returns its completed text directly. While pending, continue with identical Brief arguments and key while the host permits. Recover the same way after interruption; do not use `read_result` or another operation.
 
-Without explicit confirmation of a pre-dispatch block, treat a rejected or interrupted call with no receipt as unconfirmed: it may have reached Tegy. Denial or interruption does not confirm cancellation. Stop further calls after denial or a user pause. If waiting pauses, give a brief, accurate status and explain that the user can ask to continue the same request; do not promise a notification unless the host has arranged one.
+Use actual receipts for claims about work starting, finishing or being cancelled. A generic host rejection or interruption does not confirm any of those states. If no result arrived, say you haven’t received Tegy’s result and leave its remote outcome unconfirmed. Stop further calls after denial or a user pause. If waiting pauses, give a brief, accurate status and explain that the user can ask to continue the same request; do not promise a notification unless the host has arranged one.
 
 For a later retry, reuse the identical arguments and key. Ask if either is missing. Changed input is new work, not recovery. Explain a conflict or terminal failure and stop; do not silently start replacement work.
 
