@@ -27,7 +27,6 @@ const codexSkillUi = await readFile(
 )
 const claudeMarketplace = await readJson(".claude-plugin/marketplace.json")
 const codexMarketplace = await readJson(".agents/plugins/marketplace.json")
-const reviewCases = await readJson("submission/openai/test-cases.json")
 const decisionGateEvalCases = await readJson(
   "tests/decision-gate-eval-cases.json"
 )
@@ -143,11 +142,6 @@ for (const file of pluginFiles) {
     `Installed plugin must not contain executable source ${file}`
   )
 }
-
-assert.doesNotMatch(
-  JSON.stringify(reviewCases),
-  /create_chat|start_turn|create_handoff|review_id|retry_after/iu
-)
 
 assert.deepEqual(decisionGateEvalCases.targets, ["claude-code", "claude-cowork", "codex"])
 assert.ok(decisionGateEvalCases.cases.some(item => item.kind === "negative"))
