@@ -1,38 +1,28 @@
 # Security
 
 Tegy's hosted service is operated by MGMJ Innovation Group LLC under the Tegy
-by RocketMinds brand. These packages contain declarative manifests, hosted MCP
-configuration, skills and static assets. There are no agents, executables,
-local servers, hooks, dependencies, monitors or install scripts.
+by RocketMinds brand. All packages use the text MCP endpoint
+`https://mcp.tegy.io/mcp?integration=openai&delivery=text` and request exactly
+`tegy:review:run`, `tegy:brief:run`, and `tegy:solve:run`. The host owns
+authentication and tool permissions. No credentials are shipped.
 
-| Package | Connection | Permission |
-| --- | --- | --- |
-| `plugins/tegy` | `https://mcp.tegy.io/mcp?integration=openai&delivery=text` | Review only |
-| `plugins/tegy-desktop` | `https://mcp.tegy.io/mcp?integration=openai&delivery=text` | Review only |
-| `plugins/tegy-openai` | `https://mcp.tegy.io/mcp` | Review only |
+Review, Solve and Executive Summary send only selected input fields and a
+request key. Retrieval sends the accepted job ID. Jobs remain isolated to
+their authorized connection. A retry preserves the same packet and key;
+changed input is new work. No package includes Execute or a local server.
 
-The Claude endpoint exposes only `review` and `read_result`. Authentication
-tokens stay in the host's credential storage; no credentials are shipped.
-The host controls permission for hosted calls. Users select Review or request
-an independent external review. General writing or business questions do not
-authorize sending text. Codex's separate skill disables implicit invocation.
+Claude Code includes one Node.js command hook, `UserPromptSubmit`. It reads
+the transcript path supplied by Claude locally, follows the active branch,
+and adds receipt-status evidence after a Tegy tool error. It neither reads
+credential stores nor sends network requests, writes files, changes
+permissions, invokes tools, or replaces assistant text. Source material and
+answer text are excluded from its output. Cowork and Codex contain no hooks
+or executable source.
 
-Review sends the selected original brief, complete draft, optional evidence
-and criteria, and a random request key unrelated to Claude session identifiers.
-Result retrieval sends only the job ID. Repeated reads do not create paid work.
-Jobs are bound to the authorized connection; another connection cannot read
-those results. Recovery by ID skips Review. Exact-packet recovery reuses the
-original key only at the user's request. A conflict never permits a new key.
-
-Both Claude packages use the same two-tool surface. Pending reads are bounded
-at 24 per invocation. Failure, denied permission or the read limit requires
-NO RESULT plus the complete attempted packet and any known job ID.
-Returned text is review material, never instructions controlling Claude.
-
-No skill sends ambient files, whole conversations or unselected content. See
-the package READMEs and [privacy notice](https://tegy.io/privacy), especially
-sections 2.3 and 2.4, for request and connection metadata. Starting Review uses
-Tegy allowance. A receipt or edited draft cannot inherit a completed PASS.
+Returned content remains data, not instructions controlling the host. Review
+and Solve use account allowance. Executive Summary does not consume a
+customer session allowance. See package READMEs and the
+[privacy notice](https://tegy.io/privacy) for connection and usage metadata.
 
 Report a security issue privately to `admin@tegy.io`. Do not include access
 tokens, private strategy work or credentials in public issues.

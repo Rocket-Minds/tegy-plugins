@@ -27,6 +27,12 @@ const decisionGateEvalCases = await readJson(
   "tests/decision-gate-eval-cases.json"
 )
 
+assert.deepEqual(await readJson(path.join(claudeRoot, "hooks/hooks.json")), {
+  hooks: { UserPromptSubmit: [{ hooks: [{ type: "command",
+    command: 'node "${CLAUDE_PLUGIN_ROOT}/scripts/receipt-context.mjs"', timeout: 5,
+  }] }] },
+}, "Only the read-only local transcript reminder is installed")
+
 assert.equal(claudeManifest.name, "tegy")
 assert.match(claudeManifest.version, /^\d+\.\d+\.\d+$/u)
 assert.match(claudeManifest.description, /Solve.*review.*executive summaries.*recovery/u)
@@ -92,7 +98,7 @@ assert.deepEqual(
     .map(file => path.relative(claudeRoot, file))
     .filter(file => !file.startsWith("evals/"))
     .sort(),
-  [".claude-plugin/plugin.json", ".mcp.json", "README.md", "assets/icon.svg", "skills/brief/SKILL.md", "skills/review/SKILL.md", "skills/solve/SKILL.md"]
+  [".claude-plugin/plugin.json", ".mcp.json", "README.md", "assets/icon.svg", "hooks/hooks.json", "scripts/receipt-context.mjs", "skills/brief/SKILL.md", "skills/review/SKILL.md", "skills/solve/SKILL.md"]
 )
 for (const [root, prefix] of [[claudeRoot, ""], [openAiRoot, "tegy-"]]) {
   assert.deepEqual((await readdir(path.join(root, "skills"))).sort(), ["brief", "review", "solve"].map(name => prefix + name))
@@ -122,6 +128,7 @@ const forbiddenNames = new Set([
   "monitors.json",
 ])
 for (const file of pluginFiles) {
+  if (["hooks/hooks.json", "scripts/receipt-context.mjs"].includes(path.relative(claudeRoot, file))) continue
   assert.equal(
     forbiddenNames.has(path.basename(file)),
     false,
