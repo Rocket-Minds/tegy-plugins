@@ -12,9 +12,12 @@ The service is operated by **MGMJ Innovation Group LLC**, under the Tegy by
 RocketMinds brand. A Tegy account with eligible access is required. Review and
 Solve use the account's applicable allowance. Executive Summary does not consume
 a customer session allowance. The host controls permission for each hosted call.
-The packages do not execute plans, run local code, install hooks, or use result cards.
+The packages do not execute plans or use result cards. Claude Code includes a local
+request-status hook; Cowork and Codex remain declarative.
 
 ## Claude Code
+
+Requires Node.js 20 or newer on PATH for the local request-status hook.
 
 ```text
 /plugin marketplace add Rocket-Minds/tegy-plugins
@@ -92,6 +95,20 @@ an automatic retry. Changed input is new work, not recovery. Editing a draft
 does not carry forward an earlier Review assessment. Solve and Executive Summary
 do not imply Review approval or execution of a plan.
 
+## Local request-status check (Claude Code)
+
+After a tool interruption, Claude Code can mistake its generic local rejection
+for proof that nothing reached Tegy. The `UserPromptSubmit` hook checks the active
+local transcript branch before the next user prompt. If the latest Tegy call
+failed without a Tegy receipt, it adds factual uncertainty to Claude's context
+and preserves any earlier receipt for the exact same request. It leaves
+Claude's answer and permissions under the host's control. It makes no network
+requests, starts no work, writes no files, and never retries automatically.
+
+The hook reads the host-provided transcript locally. It emits only the tool
+identity and receipt status, never source material, answer text or credentials.
+It does not repair a frozen permission button in the host.
+
 ## What is sent
 
 Each operation sends only its selected input fields and a random request key.
@@ -108,6 +125,7 @@ error metadata are described in [privacy sections 2.3 and 2.4](https://tegy.io/p
 claude plugin validate . --strict
 claude plugin validate ./plugins/tegy --strict
 claude plugin validate ./plugins/tegy-desktop --strict
+node --test tests/receipt-context.test.mjs
 node tests/validate-structure.mjs
 node tests/validate-desktop.mjs
 claude plugin eval ./plugins/tegy --tag submission --ablation none --trust-plugin --no-publish --keep-temp

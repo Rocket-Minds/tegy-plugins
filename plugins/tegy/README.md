@@ -6,8 +6,15 @@ Claude Code install: `/plugin install tegy --marketplace Rocket-Minds/tegy-plugi
 
 Commands: `/tegy:review, /tegy:solve, /tegy:brief`. Review needs an original brief and complete draft;
 Solve needs a business problem; Brief (Executive Summary) needs source text.
-Only explicitly supplied material is sent. No ambient files, conversation
-history, local code, hooks, Execute operation, or result card is required.
+Only explicitly supplied material is sent to Tegy. No ambient files or conversation
+history are uploaded. No Execute operation or result card is used.
+
+Node.js 20 or newer must be available on PATH. A `UserPromptSubmit` hook reads
+the active local transcript branch after a Tegy tool error. It distinguishes
+a missing receipt from a confirmed remote outcome and preserves earlier
+receipts for the same request. The hook adds status evidence to Claude's
+context; it does not replace answers, change permissions, send network
+requests, write files, or retry work.
 
 The connection uses `https://mcp.tegy.io/mcp?integration=openai&delivery=text`
 and requests exactly `tegy:review:run`, `tegy:brief:run`, and `tegy:solve:run`.

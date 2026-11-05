@@ -12,7 +12,7 @@
       "name": "tegy",
       "displayName": "Tegy for Claude Code",
       "description": "Solve supplied business decisions, independently review strategy drafts, and write executive summaries, with text results and exact-request recovery.",
-      "version": "8.0.1",
+      "version": "8.1.0",
       "source": "./plugins/tegy",
       "category": "productivity",
       "homepage": "https://app.tegy.io/mcp",
