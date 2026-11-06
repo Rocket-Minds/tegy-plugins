@@ -1,7 +1,7 @@
 {
   "name": "tegy",
   "description": "Solve supplied business decisions, independently review strategy drafts, and write executive summaries, with text results and exact-request recovery.",
-  "version": "8.0.1",
+  "version": "8.2.0",
   "author": {
     "name": "MGMJ Innovation Group LLC (Tegy)"
   },
