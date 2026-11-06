@@ -54,9 +54,10 @@ it does not depend on the older registered Review app.
 
 ## Permissions and upgrades
 
-All packages connect to
-`https://mcp.tegy.io/mcp?integration=openai&delivery=text`. This text profile
-is host independent. It exposes `review`, `solve`, `brief`, and `read_result`
+Packages use the text endpoint
+`https://mcp.tegy.io/mcp?integration=openai&delivery=text`. Claude Code adds
+`&wait=complete` so its tool call can wait for the finished result. This profile
+exposes `prepare_request`, `review`, `solve`, `brief`, and `read_result`
 according to consent and excludes Execute. The requested permissions are exactly
 `tegy:review:run`, `tegy:brief:run`, and `tegy:solve:run`.
 
@@ -73,16 +74,13 @@ OpenAI's directory package; no publication or acceptance is implied here.
 
 ## Results and recovery
 
-Review and Solve can take several minutes. The host retrieves the same accepted
-job and presents Tegy's completed answer faithfully. If work is still running
-when waiting pauses, it explains the status briefly; ask to continue the same
-Tegy request later. A pending receipt is not failure or a completed answer.
-Retrieval does not start or charge for another operation. The host keeps the
-accepted job ID for recovery; it does not replace Tegy's result with its own.
-
-Executive Summary returns its finished text directly, without `read_result`.
-After an interruption, an explicit retry uses the complete retained packet and
-identical key to recover that operation.
+Review and Solve can take several minutes. Claude Code waits silently and
+returns Tegy's complete original answer. Normal execution does not require a
+Continue message. It obtains a fresh server-issued key for each new operation
+and keeps preparation, execution and recovery on the same connection. When a
+host receives a pending receipt, `read_result` waits for the same accepted job,
+including Executive Summary. Retrieval does not start or charge for another
+operation. A pending receipt is not a completed answer.
 
 If permission is denied or a request cannot complete, the host explains what
 happened and the next step without automatically resubmitting. It retains the
@@ -94,7 +92,9 @@ do not imply Review approval or execution of a plan.
 
 ## What is sent
 
-Each operation sends only its selected input fields and a random request key.
+Each operation sends only its selected input fields and a request key.
+Claude Code obtains that key through `prepare_request`, which sends only the
+selected capability and starts no paid work.
 Result retrieval sends only the accepted job ID. The plugins do not send the
 whole conversation, ambient files, or a host session ID. Include selected file
 or link content in the packet yourself; Tegy cannot retrieve it independently.

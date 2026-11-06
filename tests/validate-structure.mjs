@@ -44,7 +44,7 @@ assert.deepEqual(claudeMcpManifest, {
   mcpServers: {
     tegy: {
       type: "http",
-      url: "https://mcp.tegy.io/mcp?integration=openai&delivery=text",
+      url: "https://mcp.tegy.io/mcp?integration=openai&delivery=text&wait=complete",
       oauth: { scopes: scopes.join(" ") },
       alwaysLoad: true,
       timeout: 2_100_000,
